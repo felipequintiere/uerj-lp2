@@ -1,0 +1,3 @@
+man 1 unexpand
+
+unexpand -t 4 RectApp.java > temp && mv temp RectApp.java
