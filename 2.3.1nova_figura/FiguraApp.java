@@ -88,20 +88,30 @@ class SimpleComponent extends JComponent
 		g2.setPaint(new Color(0,0,0));
 		g2.fillRect(0, 0, getWidth(), getHeight());
 
+
 		// x, y, w, h, corFundo, corContorno, tamanhoContorno
-		MinhaElipse elipse = new MinhaElipse(
-				30,30, 400,200,
+		Retangulo retangulo = new Retangulo(
+				240,135, 480,270,
+				(new Color(0,128,128)),(Color.PINK),
+				5
+		);
+		retangulo.desenhar(g2);
+
+		// x, y, w, h, corFundo, corContorno, tamanhoContorno
+		Elipse elipse = new Elipse(
+				240,135, 480,270,
 				Color.PINK,Color.CYAN,
 				3
 		);
 		elipse.desenhar(g2);
 
-		MeuRetangulo retangulo = new MeuRetangulo(
-				300,300, 350,100,
-				(new Color(0,128,128)),(Color.PINK),
-				10
+		// x1, y1, x2, y2, corContorno, tamanhoContorno
+		Reta reta = new Reta(
+				240,135, 720,405,
+				(new Color(231,104,249)),
+				4
 		);
-		retangulo.desenhar(g2);
+		reta.desenhar(g2);
 	}
 
 	// isso não fixa o tamanho, apenas define um tamanho PREFERIDO

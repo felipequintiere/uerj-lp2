@@ -1,14 +1,15 @@
-
 package figuras;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
-import java.awt.geom.Rectangle2D;
+import java.awt.geom.Ellipse2D;
 import java.awt.BasicStroke;
 import java.awt.Color;
 
-public class MeuRetangulo {
+
+
+public class Elipse {
 	private int x, y;
 	private int w, h;
 
@@ -16,7 +17,7 @@ public class MeuRetangulo {
 	private int tamanhoContorno = 1;
 
 
-	public MeuRetangulo(
+	public Elipse(
 			int x, int y, int w, int h, 
 			Color corFundo, Color corContorno)
 	{
@@ -27,7 +28,7 @@ public class MeuRetangulo {
 		this.corFundo = corFundo;
 		this.corContorno = corContorno;
 	}
-	public MeuRetangulo(
+	public Elipse( // constructor overloading
 			int x, int y, int w, int h, 
 			Color corFundo, Color corContorno,
 			int tamanhoContorno)
@@ -36,21 +37,20 @@ public class MeuRetangulo {
 		this.tamanhoContorno = tamanhoContorno;
 	}
 
-
 	public void desenhar(Graphics g)
 	{
 		Graphics2D g2 = (Graphics2D) g;
 
-		Rectangle2D.Float retangulo = new Rectangle2D.Float(
+		Ellipse2D.Float elipse = new Ellipse2D.Float(
 				(float) x, (float) y,
 				(float) w, (float) h
 		);
 		g2.setPaint(corFundo);
-		g2.fill(retangulo);
+		g2.fill(elipse);
 
 
 		g2.setStroke(new BasicStroke(tamanhoContorno));
 		g2.setPaint(corContorno);
-		g2.draw(retangulo);
+		g2.draw(elipse);
 	}
 }
