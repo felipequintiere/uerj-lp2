@@ -16,10 +16,8 @@ public class Retangulo {
 	private int tamanhoContorno = 1;
 
 
-	public Retangulo(
-			int x, int y, int w, int h, 
-			Color corFundo, Color corContorno)
-	{
+	public Retangulo(int x, int y, int w, int h, 
+			Color corFundo, Color corContorno) {
 		this.x = x;
 		this.y = y;
 		this.w = w;
@@ -27,18 +25,15 @@ public class Retangulo {
 		this.corFundo = corFundo;
 		this.corContorno = corContorno;
 	}
-	public Retangulo(
-			int x, int y, int w, int h, 
+	public Retangulo(int x, int y, int w, int h, 
 			Color corFundo, Color corContorno,
-			int tamanhoContorno)
-	{
+			int tamanhoContorno) {
 		this(x,y,w,h,corFundo,corContorno);
 		this.tamanhoContorno = tamanhoContorno;
 	}
 
 
-	public void desenhar(Graphics g)
-	{
+	public void desenhar(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
 
 		Rectangle2D.Float retangulo = new Rectangle2D.Float(

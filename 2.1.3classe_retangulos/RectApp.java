@@ -19,7 +19,8 @@ public class RectApp {
 		System.out.printf(
 			"\nwidth: %d\nheight: %d\narea: %d\n" +
 			"x: %d\ny: %d\n",
-			r1.getWidth(),r1.getHeight(),r1.area(),r1.getX(),r1.getY());
+			r1.getWidth(), r1.getHeight(), r1.area(),
+			r1.getX(), r1.getY());
 
 		System.out.printf("\ndx: 10, dy: 10\n");
 		r1.drag(10,10);

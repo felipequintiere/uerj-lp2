@@ -1,14 +1,8 @@
 /*
-1. Copie o programa de exemplo acima para o seu repositório em uma nova pasta "02-Java2D-Hello/".
-2. Execute o exemplo.
-3. Faça algumas modificações no programa:
-    a. altere as cores de fundo e dos gráficos
-    b. adicione alguma outra primitiva gráfica (retângulo, elipse, imagem, etc)
-    c. alguma outra modificação usando a sua criatividade
-4. Inclua o novo código no GitHub na mesma pasta
-5. Inclua um "print screen" da execução (imagem .png).
-6. Como resposta, *enumere as modificações* feitas e poste o link para a sua pasta "02-Java2D-Hello/".
-    - enumere as modificações no texto da resposta aqui
+Faça algumas modificações no programa:
+a. altere as cores de fundo e dos gráficos
+b. adicione alguma outra primitiva gráfica (retângulo, elipse, imagem, etc)
+c. alguma outra modificação usando a sua criatividade
 */
 import java.awt.*;
 import java.awt.event.*;
@@ -29,7 +23,7 @@ class Hello2DFrame extends JFrame {
                 }
             }
         );
-        this.setTitle("título!");
+        this.setTitle("meu título!");
         this.setSize(400, 400);
         this.setVisible(true);
     }

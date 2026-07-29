@@ -22,6 +22,43 @@ public class RectApp {
 	}
 }
 
+class PaintFrame extends JFrame {
+	Rect r1, r2, r3, r4, r5, r6;
+
+	public PaintFrame () {
+		this.addWindowListener (
+			new WindowAdapter() {
+				public void windowClosing (WindowEvent e) {
+					System.exit(0);
+				}
+			}
+		);
+		this.setTitle("Rect - example");
+		this.setSize(600, 600);
+		this.getContentPane().setBackground(Color.BLACK);
+
+		this.r1 = new Rect(20,40, 60,90,Color.GREEN,Color.RED);
+		this.r2 = new Rect(30,180, 120,90,Color.CYAN,Color.GREEN);
+		this.r3 = new Rect(100,60, 100,70,Color.BLUE,Color.WHITE);
+		this.r4 = new Rect(200,150, 150,80,Color.GRAY,Color.CYAN);
+		this.r5 = new Rect(400,190, 140,120,Color.RED,
+				new Color(33,139,235));
+		this.r6 = new Rect(100,330, 370,210,Color.WHITE,
+				new Color(0,255,0));
+	}
+
+	public void paint (Graphics g) {
+		super.paint(g);
+
+		this.r1.paint(g);
+		this.r2.paint(g);
+		this.r3.paint(g);
+		this.r4.paint(g);
+		this.r5.paint(g);
+		this.r6.paint(g);
+	}
+}
+
 class Rect {
 	private int x, y;
 	private int w, h;
@@ -52,39 +89,3 @@ class Rect {
 	}
 }
 
-class PaintFrame extends JFrame {
-	Rect r1, r2, r3, r4, r5, r6;
-
-	public PaintFrame () {
-		this.addWindowListener (
-			new WindowAdapter() {
-				public void windowClosing (WindowEvent e) {
-					System.exit(0);
-				}
-			}
-		);
-		this.setTitle("Rect - example");
-		this.setSize(600, 600);
-		this.getContentPane().setBackground(Color.BLACK);
-
-		this.r1 = new Rect(20,40, 60,90,Color.GREEN,Color.RED);
-		this.r2 = new Rect(30,180, 120,90,Color.CYAN,Color.GREEN);
-		this.r3 = new Rect(100,60, 100,70,Color.BLUE,Color.WHITE);
-		this.r4 = new Rect(200,150, 150,80,Color.GRAY,Color.CYAN);
-		this.r5 = new Rect(400,190, 140,120,Color.RED, new Color(33,139,235));
-		this.r6 = new Rect(100,330, 370,210,Color.WHITE, new Color(0,255,0));
-	}
-
-	public void paint (Graphics g) {
-		super.paint(g);
-		//int w = getWidth();
-		//int h = getHeight();
-
-		this.r1.paint(g);
-		this.r2.paint(g);
-		this.r3.paint(g);
-		this.r4.paint(g);
-		this.r5.paint(g);
-		this.r6.paint(g);
-	}
-}
