@@ -23,6 +23,11 @@ class MeuFrame extends JFrame {
 	int mouseY;
 
 	public MeuFrame() {
+		this.setTitle("Eve - Editor Vetorial");
+		this.setSize(700, 700);
+		this.setVisible(true);
+
+		// fechar a janela
 		this.addWindowListener (
 			new WindowAdapter() {
 				public void windowClosing (WindowEvent e) {
@@ -104,10 +109,6 @@ class MeuFrame extends JFrame {
 				}
 			}
 		);
-
-		this.setTitle("Eve - Editor Vetorial");
-		this.setSize(700, 700);
-		this.setVisible(true);
 	}
 
 	public void paint(Graphics g) {

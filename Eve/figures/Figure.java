@@ -4,6 +4,11 @@ import java.awt.*;
 
 public abstract class Figure {
 	protected int x, y;
+
+	float rot;
+	int r,g,b;
+
+
 	protected Color borderColor;
 	protected Color fillColor;
 
