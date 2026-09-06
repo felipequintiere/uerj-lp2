@@ -1,35 +1,58 @@
 package figures;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 
 public abstract class Figure {
-	protected int x, y;
+	protected int x;
+	protected int y;
 
-	float rot;
-	int r,g,b;
-
+	protected double angle = 0;
 
 	protected Color borderColor;
 	protected Color fillColor;
+
+	protected int handle_gap = 10;
 
 	public Figure(int x, int y) {
 		this.x = x;
 		this.y = y;
 
-		this.borderColor = Color.white;
-		this.fillColor = Color.black;
+		this.borderColor = Color.BLACK;
+		this.fillColor = Color.WHITE;
+	}
+
+	public abstract boolean contains(int x, int y);
+
+	public abstract void drag(int dx, int dy);
+
+	public abstract void resize(int dx, int dy);
+
+	public void rotate(double delta) {
+		angle += delta;
 	}
 
 	public abstract void paint(Graphics g);
 
-	public abstract boolean contains(int x, int y);
+	public abstract void paintFocus(Graphics2D g2d, Color color, BasicStroke stroke);
 
-	public void changeBorder() {
-		this.borderColor = new Color(255,100,100);
+	public abstract void paintHover(Graphics2D g2d, Color color, BasicStroke stroke);
+
+	public abstract void paintHandle(Graphics2D g2d, Color focusColor, BasicStroke focusStroke);
+
+	public abstract boolean resizeContains(int x, int y);
+
+
+	// setter de cor de contorno
+	public void setBorderColor(Color color) {
+		this.borderColor = color;
+	}
+	// setter de cor de preenchimento
+	public void setFillColor(Color color) {
+		this.fillColor = color;
 	}
 
-	public void drag(int x, int y) {
-		this.x = x;
-		this.y = y;
+	public double getAngle() {
+		return this.angle;
 	}
 }

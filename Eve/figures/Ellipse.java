@@ -3,36 +3,18 @@ package figures;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Ellipse2D.Double;
+import java.awt.geom.Rectangle2D;
+import java.awt.geom.AffineTransform;
 
 public class Ellipse extends Figure {
-	private int w, h;
+	private int width;
+	private int height;
 
-	public Ellipse(int x, int y, int w, int h) {
+	public Ellipse(int x, int y, int width, int height) {
 		super(x,y);
 
-		this.w = w;
-		this.h = h;
-	}
-	public Ellipse(int x, int y, int w, int h,
-			Color fillColor, Color borderColor) {
-		super(x,y);
-		this.w = w;
-		this.h = h;
-
-		this.fillColor = fillColor;
-		this.borderColor = borderColor;
-	}
-
-	//public void print () {...}
-
-	public void paint(Graphics g) {
-		Graphics2D g2d = (Graphics2D) g;
-
-		g2d.setColor(fillColor);
-		g2d.fill(new Ellipse2D.Double(x, y, w, h));
-
-		g2d.setColor(borderColor);
-		g2d.draw(new Ellipse2D.Double(x, y, w, h));
+		this.width = width;
+		this.height = height;
 	}
 
 	public void drag (int dx, int dy) {
@@ -41,9 +23,97 @@ public class Ellipse extends Figure {
 	}
 
 	public boolean contains(int x, int y) {
-		Ellipse2D ellipse =
-			new Ellipse2D.Double(this.x, this.y, w, h);
+		return new Ellipse2D.Double(
+			this.x,
+			this.y,
+			width,
+			height
+		).contains(x, y);
+	}
 
-		return ellipse.contains(x, y);
+        public void resize(int dx, int dy) {
+                this.width += dx;
+                this.height += dy;
+
+                if (width < 5) {
+                        width = 5;
+		}
+
+                if (height < 5) {
+                        height = 5;
+		}
+        }
+
+	public void paint(Graphics g) {
+		Graphics2D g2d = (Graphics2D) g;
+
+		AffineTransform saveAT = g2d.getTransform();
+		g2d.rotate(super.angle, x + (width/2), y + (height/2));
+
+
+		g2d.setColor(fillColor);
+		g2d.fill(new Ellipse2D.Double(x, y, width, height));
+
+		g2d.setColor(borderColor);
+		g2d.draw(new Ellipse2D.Double(x, y, width, height));
+
+
+		g2d.setTransform(saveAT);
+	}
+
+
+	public void paintFocus(Graphics2D g2d, Color color, BasicStroke stroke) {
+		AffineTransform saveAT = g2d.getTransform();
+		g2d.rotate(super.angle, x + (width/2), y + (height/2));
+
+
+		g2d.setColor(color);
+		g2d.setStroke(stroke);
+		g2d.drawRect(x, y, width, height);
+
+
+		g2d.setTransform(saveAT);
+	}
+
+	public void paintHover(Graphics2D g2d, Color color, BasicStroke stroke) {
+		AffineTransform saveAT = g2d.getTransform();
+		g2d.rotate(super.angle, x + (width/2), y + (height/2));
+
+
+		g2d.setColor(color);
+		g2d.setStroke(stroke);
+		g2d.draw(new Ellipse2D.Double(x, y, width, height));
+
+
+		g2d.setTransform(saveAT);
+	}
+
+	public void paintHandle(Graphics2D g2d, Color color, BasicStroke stroke) {
+		AffineTransform saveAT = g2d.getTransform();
+		g2d.rotate(super.angle, x + (width/2), y + (height/2));
+
+		
+		g2d.setColor(color);
+		g2d.setStroke(stroke);
+		g2d.drawRect(
+			x + width - handle_gap,
+			y + height - handle_gap,
+			2 * handle_gap,
+			2 * handle_gap
+		);
+
+
+		g2d.setTransform(saveAT);
+	}
+
+	public boolean resizeContains(int x, int y) {
+		Rectangle2D rectangle = new Rectangle2D.Double(
+			this.x + width - handle_gap,
+			this.y + height - handle_gap,
+			2 * handle_gap,
+			2 * handle_gap
+		);
+
+		return rectangle.contains(x,y);
 	}
 }

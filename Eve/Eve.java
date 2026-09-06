@@ -16,11 +16,16 @@ public class Eve {
 class MeuFrame extends JFrame {
 	ArrayList<Figure> figs = new ArrayList<Figure>();
 
-	// ponteiro para o objeto em foco
+	// focus/hover sobre objeto
 	Figure focus = null;
+	Figure hover = null;
+
+	boolean resizing = false;
 
 	int mouseX;
 	int mouseY;
+	int dx;
+	int dy;
 
 	public MeuFrame() {
 		this.setTitle("Eve - Editor Vetorial");
@@ -36,76 +41,210 @@ class MeuFrame extends JFrame {
 			}
 		);
 
-		// posição atual do ponteiro
 		this.addMouseMotionListener(
 			new MouseMotionAdapter() {
-				public void mouseMoved(MouseEvent evt) {
-					mouseX = evt.getX();
-					mouseY = evt.getY();
-				}
-				public void mouseDragged(MouseEvent evt) {
+				public void mouseDragged(MouseEvent e) {
 					if (focus == null) {
 						return;
 					}
 
-					int dx, dy;
-					dx = evt.getX() - mouseX;
-					dy = evt.getY() - mouseY;
-					mouseX = evt.getX();
-					mouseY = evt.getY();
-					
-					System.out.printf("dx: %d dy: %d\n", dx,dy);
+					dx = e.getX() - mouseX;
+					dy = e.getY() - mouseY;
 
-					focus.drag(dx,dy);
+					mouseX = e.getX();
+					mouseY = e.getY();
+
+					if (resizing) {
+						focus.resize(dx,dy);
+					}
+					else {
+						focus.drag(dx,dy);
+					}
+					repaint();
+
+				}
+
+				public void mouseMoved(MouseEvent e) {
+					mouseX = e.getX();
+					mouseY = e.getY();
+
+					Figure aux_hover = hover;
+					boolean foundHover = false;
+
+					for (Figure fig : figs) {
+						if (fig.contains(e.getX(), e.getY())) {
+							hover = fig;
+							foundHover = true;
+						}
+					}
+
+					if (aux_hover!= hover) {
+						repaint();
+					}
+					// remover a borda azul quando o ponteiro não estiver
+					// sobre um objeto
+					else if (aux_hover != null && !foundHover) {
+						hover = null;
+						repaint();
+					}
+				}
+			}
+		);
+
+		this.addMouseListener(
+			new MouseAdapter() {
+				public void mousePressed(MouseEvent e) {
+					if (e.getButton() == MouseEvent.BUTTON1) {
+						if (focus != null &&
+								focus.resizeContains(e.getX(), e.getY())) {
+							resizing = true;
+						}
+						else if (hover == null) {
+							focus = null;
+						}
+						else if (hover.contains(e.getX(), e.getY())) {
+							focus = hover;
+						}
+					}
+
+					else if (e.getButton() == MouseEvent.BUTTON3) {
+						if (hover == null) {
+							focus = null;
+						}
+						else if (hover.contains(e.getX(), e.getY())) {
+							focus = hover;
+							resizing = true;
+						}
+					}
+
+					repaint();
+				}
+                                public void mouseReleased(MouseEvent e) {
+					resizing = false;
+				}
+			}
+		);
+
+		this.addMouseWheelListener(
+			new MouseWheelListener() {
+				public void mouseWheelMoved(MouseWheelEvent e) {
+					if (focus == null) {
+						return;
+					}
+
+					// negative values if the mouse wheel was
+					// rotated up or away from the user, and
+					// positive values if the mouse wheel was
+					// rotated down or towards the user
+					focus.rotate(e.getWheelRotation() / 20.0);
+					System.out.printf("%f\n", focus.getAngle());
 					repaint();
 				}
 			}
 		);
+
 
 		// comandos atrelados às teclas
 		this.addKeyListener(
 			new KeyAdapter() {
 				public void keyPressed(KeyEvent evt) {
 
-					Random rand = new Random();
-					Color fillColorAleatorio = new Color(rand.nextInt(255),rand.nextInt(255),rand.nextInt(255));
-					Color borderColorAleatorio = new Color(rand.nextInt(255),rand.nextInt(255),rand.nextInt(255));
+					switch (evt.getKeyCode()) {
+					case KeyEvent.VK_Q:
+						figs.add(new Line(
+							mouseX, mouseY,
+							mouseX+100, mouseY+60)
+						);
+						break;
+					case KeyEvent.VK_W:
+						figs.add(new Triangle(
+							mouseX, mouseY,
+							mouseX - 50, mouseY + 50,
+							mouseX + 50, mouseY + 50)
+						);
+						break;
+					case KeyEvent.VK_E:
+						figs.add(new Ellipse(
+							mouseX, mouseY,
+							100, 60)
+						);
+						break;
+					case KeyEvent.VK_R:
+						figs.add(new Rect(
+							mouseX, mouseY,
+							100, 60)
+						);
+						break;
+					case KeyEvent.VK_T:
+						figs.add(new Text(
+							mouseX,
+							mouseY,
+							"Texto",
+							30,
+							"SansSerif"
+						));
+						break;
 
-					if (evt.getKeyChar() == 'r') {
-						figs.add(new Rect(mouseX, mouseY, 100, 60, fillColorAleatorio, borderColorAleatorio));
-					}
-					else if (evt.getKeyChar() == 'e') {
-						figs.add(new Ellipse(mouseX, mouseY, 100, 60, fillColorAleatorio, borderColorAleatorio));
-					}
-					else if (evt.getKeyChar() == 'l') {
-						figs.add(new Line(mouseX, mouseY, mouseX+100, mouseY+60, borderColorAleatorio));
-					}
-					else if (evt.getKeyCode() == KeyEvent.VK_DELETE ||
-							evt.getKeyCode() == '\b' ) {
+
+
+					//V20j:s/10/5/gc
+					case KeyEvent.VK_RIGHT:
+					case KeyEvent.VK_L:
+						if (focus != null) {
+							focus.drag(30, 0);
+						}
+						break;
+					case KeyEvent.VK_LEFT:
+					case KeyEvent.VK_H:
+						if (focus != null) {
+							focus.drag(-30, 0);
+						}
+						break;
+					case KeyEvent.VK_UP:
+					case KeyEvent.VK_K:
+						if (focus != null) {
+							focus.drag(0, -30);
+						}
+						break;
+					case KeyEvent.VK_DOWN:
+					case KeyEvent.VK_J:
+						if (focus != null) {
+							focus.drag(0, 30);
+						}
+						break;
+
+
+
+					case KeyEvent.VK_D:
+					case KeyEvent.VK_DELETE:
+					case KeyEvent.VK_BACK_SPACE:
 						if (focus != null) {
 							figs.remove(focus);
+
+							if (hover == focus) {
+								hover = null;
+							}
 							focus = null;
 						}
+						break;
+
+					case KeyEvent.VK_O:
+						if (figs.isEmpty()) {
+							return;
+						}
+
+						int index;
+						if (focus == null ||
+								(index = figs.indexOf(focus)) == 0) {
+							focus = figs.get(figs.size() - 1);
+						}
+						else {
+							index = (index - 1 + figs.size()) % figs.size();
+							focus = figs.get(index);
+						}
+						break;
 					}
 					repaint();
-				}
-			}
-		);
-
-		this.addMouseListener
-			(new MouseAdapter() {
-				public void mousePressed(MouseEvent evt) {
-					focus = null;
-
-					for (Figure fig : figs) {
-						if (fig.contains(evt.getX(), evt.getY())) {
-							focus = fig;
-						}
-					}
-
-					// DEBUG
-					// printar no terminal a figura selecionada
-					System.out.println(focus);
 				}
 			}
 		);
@@ -123,12 +262,42 @@ class MeuFrame extends JFrame {
 		//g2d.setPaint(Color.black);
 		//g2d.fillRect(0,0, w,h);
 
+		Color focusColor = new Color(255, 0, 0);
+		Color hoverColor = new Color(0, 0, 255);
+
+		BasicStroke focusStroke = new BasicStroke(
+			3.0f,
+			BasicStroke.CAP_BUTT,
+			BasicStroke.JOIN_MITER,
+			10.0f,
+			new float[] {5.0f, 5.0f},
+			0.0f
+		);
+		BasicStroke hoverStroke = new BasicStroke(2.0f);
+
 		for (Figure fig : figs) {
 			fig.paint(g2d);
-
-			if (fig == focus) {
-				fig.changeBorder(); // quero destacar a figura selecionada
-			}
 		}
+
+		if (focus != null) {
+			focus.paintFocus(g2d, focusColor, focusStroke);
+			focus.paintHandle(g2d, new Color(0, 0, 255), new BasicStroke(2.0f));
+		}
+		if (hover != null && hover != focus) {
+			hover.paintHover(g2d, hoverColor, hoverStroke);
+		}
+		// ./figures/Figure.java
+		// ./figures/Rect.java
+		// ./figures/Ellipse.java
+		// ./figures/Line.java
+		// ./figures/Text.java
 	}
 }
+
+//Random rand = new Random();
+//Color fillColorAleatorio = new Color(rand.nextInt(255),rand.nextInt(255),rand.nextInt(255));
+//Color borderColorAleatorio = new Color(rand.nextInt(255),rand.nextInt(255),rand.nextInt(255));
+//
+//figs.add(new Rect(mouseX, mouseY, 100, 60, fillColorAleatorio, borderColorAleatorio));
+//figs.add(new Ellipse(mouseX, mouseY, 100, 60, fillColorAleatorio, borderColorAleatorio));
+//figs.add(new Line(mouseX, mouseY, mouseX+100, mouseY+60, borderColorAleatorio));
