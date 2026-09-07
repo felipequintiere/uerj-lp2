@@ -11,16 +11,11 @@ git clone https://github.com/felipequintiere/uerj-lp2.git
 cd ./uerj-lp2/Eve/
 javac Eve.java
 ```
-nota: execute o programa com  
+
+NOTA: execute com  
 ```
 java Eve`
 ```
-
-#### Uso do Programa
-```
-$ java Eve -h
-```
----
 
 #### Figuras Disponíveis
 `Q` Linha  
@@ -47,10 +42,10 @@ NOTA: a figura sob o ponteiro do mouse é identificada como **hover** e é desta
 #### Movimentação das Figuras
 pressione o **botão esquerdo** sobre a figura em foco e:
 
-1. Mouse:
+0. Mouse:
 - arraste o mouse para mover a figura
 
-2. Teclado
+0. Teclado
 - use as teclas de setas (UP, DOWN, LEFT, RIGHT)  
 
 NOTA: cada pressionamento das teclas desloca a figura em 30 pixels  
@@ -75,7 +70,9 @@ Para alterar a posição da figura em foco:
 #### Remoção
 Para remover a figura atualmente em foco:  
 
-`D` || `Delete` || `Backspace`
+0. `D`  
+0. `Delete`  
+0. `Backspace`  
 
 ---
 
