@@ -32,6 +32,8 @@ $ java Eve -h
 NOTA: cada tecla está associada à criação de uma figura  
 NOTA: a nova figura é criada na posição atual do ponteiro do mouse
 
+---
+
 #### Foco e Hover
 - **clique esquerdo** sobre uma figura: seleciona a figura e a põe em **foco**
 - **clique esquerdo** fora das figuras: remove o foco
@@ -39,6 +41,8 @@ NOTA: a nova figura é criada na posição atual do ponteiro do mouse
 
 NOTA: a figura em **foco** é destacada em vermelho e possui alças de manipulação  
 NOTA: a figura sob o ponteiro do mouse é identificada como **hover** e é destacada em azul  
+
+---
 
 #### Movimentação das Figuras
 pressione o **botão esquerdo** sobre a figura em foco e:
@@ -51,10 +55,14 @@ pressione o **botão esquerdo** sobre a figura em foco e:
 
 NOTA: cada pressionamento das teclas desloca a figura em 30 pixels  
 
+---
+
 #### Tamanho
 A figura pode ser redimensionada ao arrastar as alças exibidas quando uma figura está em foco ou pressionando o **botão direito do mouse** sobre a figura e arrastando
 
 NOTA: o comportamento da alça depende do tipo de figura
+
+---
 
 #### Z-order
 Para alterar a posição da figura em foco:
@@ -62,10 +70,14 @@ Para alterar a posição da figura em foco:
 `Ctrl + U`: move a figura para cima na ordem da lista  
 `Ctrl + D`: move a figura para baixo na ordem da lista  
 
+---
+
 #### Remoção
 Para remover a figura atualmente em foco:  
 
 `D` || `Delete` || `Backspace`
+
+---
 
 #### Cores
 A tecla `C` permite alterar as cores da figura em foco. O programa solicita primeiro a **cor de contorno** e depois a **cor de fundo**, quando aplicável.
