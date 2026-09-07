@@ -15,7 +15,7 @@ cd ./uerj-lp2/Eve/
 javac Eve.java
 ```
 
-NOTA: execute com  
+execute com  
 ```
 java Eve
 ```
@@ -49,8 +49,7 @@ pressione o **botão esquerdo** sobre a figura em foco e:
 
 0. Mouse:
 - arraste o mouse para mover a figura
-
-0. Teclado
+1. Teclado
 - use as teclas de setas (UP, DOWN, LEFT, RIGHT)  
 
 NOTA: cada pressionamento das teclas desloca a figura em 30 pixels  
