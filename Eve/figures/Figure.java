@@ -3,6 +3,8 @@ package figures;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 
+import javax.swing.JFrame;
+
 public abstract class Figure {
 	protected int x;
 	protected int y;
@@ -13,6 +15,7 @@ public abstract class Figure {
 	protected Color fillColor;
 
 	protected int handle_gap = 10;
+	protected BasicStroke stroke = new BasicStroke(2.0f);
 
 	public Figure(int x, int y) {
 		this.x = x;
@@ -41,6 +44,8 @@ public abstract class Figure {
 	public abstract void paintHandle(Graphics2D g2d, Color focusColor, BasicStroke focusStroke);
 
 	public abstract boolean resizeContains(int x, int y);
+
+	public abstract void changeColor(JFrame frame);
 
 
 	// setter de cor de contorno

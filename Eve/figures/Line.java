@@ -5,6 +5,9 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.AffineTransform;
 
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
 public class Line extends Figure {
 	private int x2, y2;
 
@@ -46,6 +49,7 @@ public class Line extends Figure {
 		);
 
 		g2d.setColor(borderColor);
+		g2d.setStroke(this.stroke); // stroke da classe Figure
 		g2d.draw(new Line2D.Double(x, y, x2, y2));
 
 		g2d.setTransform(saveAT);
@@ -117,4 +121,15 @@ public class Line extends Figure {
 
 		return rectangle.contains(x,y);
 	}
+
+        public void changeColor(JFrame frame) {
+                String string;
+                int hex;
+
+                string = JOptionPane.showInputDialog(
+                        frame, "Selecione a cor de contorno (R G B):"
+                );
+                hex = Integer.parseInt(string, 16);
+                this.setBorderColor(new Color(hex));
+        }
 }

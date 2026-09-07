@@ -9,11 +9,11 @@ import figures.*;
 
 public class Eve {
 	public static void main(String[] args) {
-		MeuFrame frame = new MeuFrame();
+		EveFrame frame = new EveFrame();
 	}
 }
 
-class MeuFrame extends JFrame {
+class EveFrame extends JFrame {
 	ArrayList<Figure> figs = new ArrayList<Figure>();
 
 	// focus/hover sobre objeto
@@ -29,15 +29,15 @@ class MeuFrame extends JFrame {
 
 	int index; // index da lista heterogênea
 
-	public MeuFrame() {
+	public EveFrame() {
 		this.setTitle("Eve - Editor Vetorial");
 		this.setSize(700, 700);
 		this.setVisible(true);
 
 		// fechar a janela
-		this.addWindowListener (
+		this.addWindowListener(
 			new WindowAdapter() {
-				public void windowClosing (WindowEvent e) {
+				public void windowClosing(WindowEvent e) {
 					System.exit(0);
 				}
 			}
@@ -80,7 +80,7 @@ class MeuFrame extends JFrame {
 						}
 					}
 
-					if (aux_hover!= hover) {
+					if (aux_hover != hover) {
 						repaint();
 					}
 					// remover a borda azul quando o ponteiro não estiver
@@ -92,7 +92,6 @@ class MeuFrame extends JFrame {
 				}
 			}
 		);
-
 		this.addMouseListener(
 			new MouseAdapter() {
 				public void mousePressed(MouseEvent e) {
@@ -120,12 +119,11 @@ class MeuFrame extends JFrame {
 
 					repaint();
 				}
-                                public void mouseReleased(MouseEvent e) {
+				public void mouseReleased(MouseEvent e) {
 					resizing = false;
 				}
 			}
 		);
-
 		this.addMouseWheelListener(
 			new MouseWheelListener() {
 				public void mouseWheelMoved(MouseWheelEvent e) {
@@ -144,8 +142,6 @@ class MeuFrame extends JFrame {
 			}
 		);
 
-
-		// comandos atrelados às teclas
 		this.addKeyListener(
 			new KeyAdapter() {
 				public void keyPressed(KeyEvent e) {
@@ -209,7 +205,7 @@ class MeuFrame extends JFrame {
 							break;
 
 
-						//V20j:s/10/5/gc
+						//V20j:s/30/10/gc
 						case KeyEvent.VK_RIGHT:
 						case KeyEvent.VK_L:
 							if (focus != null) {
@@ -247,13 +243,15 @@ class MeuFrame extends JFrame {
 								}
 							}
 							focus = null;
-
 							break;
-
 						case KeyEvent.VK_O:
 							index = figs.indexOf(focus);
-
 							changeFocus();
+							break;
+						case KeyEvent.VK_C:
+							if (focus != null) {
+								focus.changeColor(EveFrame.this);
+							}
 							break;
 						}
 					}
@@ -284,11 +282,6 @@ class MeuFrame extends JFrame {
 		int w = getWidth();
 		int h = getHeight();
 
-
-		// cor de fundo
-		//g2d.setPaint(Color.black);
-		//g2d.fillRect(0,0, w,h);
-
 		Color focusColor = new Color(255, 0, 0);
 		Color hoverColor = new Color(0, 0, 255);
 
@@ -313,19 +306,5 @@ class MeuFrame extends JFrame {
 		if (hover != null && hover != focus) {
 			hover.paintHover(g2d, hoverColor, hoverStroke);
 		}
-		// ./figures/Figure.java
-		// ./figures/Rect.java
-		// ./figures/Triangle.java
-		// ./figures/Ellipse.java
-		// ./figures/Line.java
-		// ./figures/Text.java
 	}
 }
-
-//Random rand = new Random();
-//Color fillColorAleatorio = new Color(rand.nextInt(255),rand.nextInt(255),rand.nextInt(255));
-//Color borderColorAleatorio = new Color(rand.nextInt(255),rand.nextInt(255),rand.nextInt(255));
-//
-//figs.add(new Rect(mouseX, mouseY, 100, 60, fillColorAleatorio, borderColorAleatorio));
-//figs.add(new Ellipse(mouseX, mouseY, 100, 60, fillColorAleatorio, borderColorAleatorio));
-//figs.add(new Line(mouseX, mouseY, mouseX+100, mouseY+60, borderColorAleatorio));

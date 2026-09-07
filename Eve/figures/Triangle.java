@@ -4,6 +4,9 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.AffineTransform;
 
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
 public class Triangle extends Figure {
 	private int x2, y2;
 	private int x3, y3;
@@ -93,6 +96,7 @@ public class Triangle extends Figure {
 		g2d.fillPolygon(triangle);
 
 		g2d.setColor(borderColor);
+		g2d.setStroke(this.stroke); // stroke da classe Figure
 		g2d.drawPolygon(triangle);
 
 		g2d.setTransform(saveAT);
@@ -191,4 +195,22 @@ public class Triangle extends Figure {
 			return false;
 		}
 	}
+
+        public void changeColor(JFrame frame) {
+                String string;
+                int hex;
+
+                string = JOptionPane.showInputDialog(
+                        frame, "Selecione a cor de contorno (R G B):"
+                );
+                hex = Integer.parseInt(string, 16);
+                this.setBorderColor(new Color(hex));
+
+
+                string = JOptionPane.showInputDialog(
+                        frame, "Selecione a cor de fundo (R G B):"
+                );
+                hex = Integer.parseInt(string, 16);
+                this.setFillColor(new Color(hex));
+        }
 }

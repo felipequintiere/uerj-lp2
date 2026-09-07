@@ -6,6 +6,9 @@ import java.awt.geom.Ellipse2D.Double;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.AffineTransform;
 
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
 public class Ellipse extends Figure {
 	private int width;
 	private int height;
@@ -55,6 +58,7 @@ public class Ellipse extends Figure {
 		g2d.fill(new Ellipse2D.Double(x, y, width, height));
 
 		g2d.setColor(borderColor);
+		g2d.setStroke(this.stroke); // stroke da classe Figure
 		g2d.draw(new Ellipse2D.Double(x, y, width, height));
 
 
@@ -116,4 +120,22 @@ public class Ellipse extends Figure {
 
 		return rectangle.contains(x,y);
 	}
+
+        public void changeColor(JFrame frame) {
+                String string;
+                int hex;
+
+                string = JOptionPane.showInputDialog(
+                        frame, "Selecione a cor de contorno (R G B):"
+                );
+                hex = Integer.parseInt(string, 16);
+                this.setBorderColor(new Color(hex));
+
+
+                string = JOptionPane.showInputDialog(
+                        frame, "Selecione a cor de fundo (R G B):"
+                );
+                hex = Integer.parseInt(string, 16);
+                this.setFillColor(new Color(hex));
+        }
 }
