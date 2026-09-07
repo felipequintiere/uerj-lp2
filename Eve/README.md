@@ -15,18 +15,18 @@ nota: execute o programa com `java Eve`
 
 #### Uso do Programa
 ```
-$ java Eve - h
+$ java Eve -h
 ```
 ---
 
 ## Figuras Disponíveis
-`Q` Linha
-`W` Triângulo
-`E` Elipse
-`R` Retângulo
-`T` Texto
+`Q` Linha  
+`W` Triângulo  
+`E` Elipse  
+`R` Retângulo  
+`T` Texto  
 
-NOTA: cada tecla está associada à criação de uma figura
+NOTA: cada tecla está associada à criação de uma figura  
 NOTA: a nova figura é criada na posição atual do ponteiro do mouse
 
 ## Foco e Hover
