@@ -34,8 +34,8 @@ NOTA: a nova figura é criada na posição atual do ponteiro do mouse
 - **clique esquerdo** fora das figuras: remove o foco
 - tecla `O`: altera o foco para outra figura
 
-NOTA: a figura em **foco** é destacada em vermelho e possui alças de manipulação
-NOTA: a figura sob o ponteiro do mouse é identificada como **hover** e é destacada em azul
+NOTA: a figura em **foco** é destacada em vermelho e possui alças de manipulação  
+NOTA: a figura sob o ponteiro do mouse é identificada como **hover** e é destacada em azul  
 
 ## Movimentação das Figuras
 pressione o **botão esquerdo** sobre a figura em foco e:
@@ -44,8 +44,8 @@ pressione o **botão esquerdo** sobre a figura em foco e:
 - arraste o mouse para mover a figura
 
 2. Teclado
-- use as teclas de setas (UP, DOWN, LEFT, RIGHT)
-NOTA: cada pressionamento das teclas desloca a figura em 30 pixels
+- use as teclas de setas (UP, DOWN, LEFT, RIGHT)  
+NOTA: cada pressionamento das teclas desloca a figura em 30 pixels  
 
 ## Tamanho
 A figura pode ser redimensionada ao arrastar as alças exibidas quando uma figura está em foco ou pressionando o **botão direito do mouse** sobre a figura e arrastando
@@ -55,11 +55,11 @@ NOTA: o comportamento da alça depende do tipo de figura
 ## Z-order
 Para alterar a posição da figura em foco:
 
-`Ctrl + U`: move a figura para cima na ordem da lista
-`Ctrl + D`: move a figura para baixo na ordem da lista
+`Ctrl + U`: move a figura para cima na ordem da lista  
+`Ctrl + D`: move a figura para baixo na ordem da lista  
 
 ## Remoção
-Para remover a figura atualmente em foco:
+Para remover a figura atualmente em foco:  
 `D` || `Delete` || `Backspace`
 
 ## Cores
