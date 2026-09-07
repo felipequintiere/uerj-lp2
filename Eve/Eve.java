@@ -27,6 +27,8 @@ class MeuFrame extends JFrame {
 	int dx;
 	int dy;
 
+	int index; // index da lista heterogênea
+
 	public MeuFrame() {
 		this.setTitle("Eve - Editor Vetorial");
 		this.setSize(700, 700);
@@ -106,7 +108,6 @@ class MeuFrame extends JFrame {
 							focus = hover;
 						}
 					}
-
 					else if (e.getButton() == MouseEvent.BUTTON3) {
 						if (hover == null) {
 							focus = null;
@@ -147,107 +148,133 @@ class MeuFrame extends JFrame {
 		// comandos atrelados às teclas
 		this.addKeyListener(
 			new KeyAdapter() {
-				public void keyPressed(KeyEvent evt) {
+				public void keyPressed(KeyEvent e) {
+					if (e.isControlDown()) {
+						switch(e.getKeyCode()) {
+						case KeyEvent.VK_U:
+							index = figs.indexOf(focus);
 
-					switch (evt.getKeyCode()) {
-					case KeyEvent.VK_Q:
-						figs.add(new Line(
-							mouseX, mouseY,
-							mouseX+100, mouseY+60)
-						);
-						break;
-					case KeyEvent.VK_W:
-						figs.add(new Triangle(
-							mouseX, mouseY,
-							mouseX - 50, mouseY + 50,
-							mouseX + 50, mouseY + 50)
-						);
-						break;
-					case KeyEvent.VK_E:
-						figs.add(new Ellipse(
-							mouseX, mouseY,
-							100, 60)
-						);
-						break;
-					case KeyEvent.VK_R:
-						figs.add(new Rect(
-							mouseX, mouseY,
-							100, 60)
-						);
-						break;
-					case KeyEvent.VK_T:
-						figs.add(new Text(
-							mouseX,
-							mouseY,
-							"Texto",
-							30,
-							"SansSerif"
-						));
-						break;
+							if (index < figs.size() - 1) {
+								Figure tmp = figs.get(index);
+								figs.set(index, figs.get(index + 1));
+								figs.set(index + 1, tmp);
+							}
+							break;
+						case KeyEvent.VK_D:
+							index = figs.indexOf(focus);
 
-
-
-					//V20j:s/10/5/gc
-					case KeyEvent.VK_RIGHT:
-					case KeyEvent.VK_L:
-						if (focus != null) {
-							focus.drag(30, 0);
+							if (index > 0) {
+								Figure tmp = figs.get(index);
+								figs.set(index, figs.get(index - 1));
+								figs.set(index - 1, tmp);
+							}
+							break;
 						}
-						break;
-					case KeyEvent.VK_LEFT:
-					case KeyEvent.VK_H:
-						if (focus != null) {
-							focus.drag(-30, 0);
-						}
-						break;
-					case KeyEvent.VK_UP:
-					case KeyEvent.VK_K:
-						if (focus != null) {
-							focus.drag(0, -30);
-						}
-						break;
-					case KeyEvent.VK_DOWN:
-					case KeyEvent.VK_J:
-						if (focus != null) {
-							focus.drag(0, 30);
-						}
-						break;
+					}
+					else {
+						switch (e.getKeyCode()) {
+						case KeyEvent.VK_Q:
+							figs.add(new Line(
+								mouseX, mouseY,
+								mouseX+100, mouseY+60)
+							);
+							break;
+						case KeyEvent.VK_W:
+							figs.add(new Triangle(
+								mouseX, mouseY,
+								mouseX - 50, mouseY + 50,
+								mouseX + 50, mouseY + 50)
+							);
+							break;
+						case KeyEvent.VK_E:
+							figs.add(new Ellipse(
+								mouseX, mouseY,
+								100, 60)
+							);
+							break;
+						case KeyEvent.VK_R:
+							figs.add(new Rect(
+								mouseX, mouseY,
+								100, 60)
+							);
+							break;
+						case KeyEvent.VK_T:
+							figs.add(new Text(
+								mouseX,
+								mouseY,
+								"Texto",
+								30,
+								"SansSerif"
+							));
+							break;
 
 
+						//V20j:s/10/5/gc
+						case KeyEvent.VK_RIGHT:
+						case KeyEvent.VK_L:
+							if (focus != null) {
+								focus.drag(30, 0);
+							}
+							break;
+						case KeyEvent.VK_LEFT:
+						case KeyEvent.VK_H:
+							if (focus != null) {
+								focus.drag(-30, 0);
+							}
+							break;
+						case KeyEvent.VK_UP:
+						case KeyEvent.VK_K:
+							if (focus != null) {
+								focus.drag(0, -30);
+							}
+							break;
+						case KeyEvent.VK_DOWN:
+						case KeyEvent.VK_J:
+							if (focus != null) {
+								focus.drag(0, 30);
+							}
+							break;
 
-					case KeyEvent.VK_D:
-					case KeyEvent.VK_DELETE:
-					case KeyEvent.VK_BACK_SPACE:
-						if (focus != null) {
-							figs.remove(focus);
 
-							if (hover == focus) {
-								hover = null;
+						case KeyEvent.VK_D:
+						case KeyEvent.VK_DELETE:
+						case KeyEvent.VK_BACK_SPACE:
+							if (focus != null) {
+								figs.remove(focus);
+
+								if (hover == focus) {
+									hover = null;
+								}
 							}
 							focus = null;
-						}
-						break;
 
-					case KeyEvent.VK_O:
-						if (figs.isEmpty()) {
-							return;
-						}
+							break;
 
-						int index;
-						if (focus == null ||
-								(index = figs.indexOf(focus)) == 0) {
-							focus = figs.get(figs.size() - 1);
+						case KeyEvent.VK_O:
+							index = figs.indexOf(focus);
+
+							changeFocus();
+							break;
 						}
-						else {
-							index = (index - 1 + figs.size()) % figs.size();
-							focus = figs.get(index);
-						}
-						break;
 					}
 					repaint();
 				}
 			}
 		);
+	}
+	void changeFocus() {
+		if (figs.isEmpty()) {
+			return;
+		}
+
+		if (focus == null ||
+				(index = figs.indexOf(focus)) == 0) {
+			focus = figs.get(figs.size() - 1);
+		}
+		else {
+			index = (index - 1 + figs.size()) % figs.size();
+			focus = figs.get(index);
+		}
 	}
 
 	public void paint(Graphics g) {
@@ -288,6 +315,7 @@ class MeuFrame extends JFrame {
 		}
 		// ./figures/Figure.java
 		// ./figures/Rect.java
+		// ./figures/Triangle.java
 		// ./figures/Ellipse.java
 		// ./figures/Line.java
 		// ./figures/Text.java

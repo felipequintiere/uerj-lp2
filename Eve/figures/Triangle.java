@@ -10,6 +10,8 @@ public class Triangle extends Figure {
 
 	private Polygon triangle = new Polygon();
 
+	private int vertex = 0;
+
 	public Triangle(int x, int y, int x2, int y2, int x3, int y3) {
 		super(x,y);
 
@@ -38,6 +40,7 @@ public class Triangle extends Figure {
 		triangle.xpoints[0] = x;
 		triangle.xpoints[1] = x2;
 		triangle.xpoints[2] = x3;
+
 		triangle.ypoints[0] = y;
 		triangle.ypoints[1] = y2;
 		triangle.ypoints[2] = y3;
@@ -46,10 +49,35 @@ public class Triangle extends Figure {
 	}
 	
 	public void resize(int dx, int dy) {
-		this.x3 += dx;
-		this.y3 += dy;
+		switch (vertex) {
+		/*case 0: // ponteiro fora dos vértices
+			y -= dy;
+			x2 -= dx;
+			y2 += dy;
+			x3 += dx;
+			y3 += dy;
+			break;
+		*/
+		case 1:
+			x += dx;
+			y += dy;
+			break;
+		case 2:
+			x2 += dx;
+			y2 += dy;
+			break;
+		case 3:
+			x3 += dx;
+			y3 += dy;
+			break;
+		}
 
+		triangle.xpoints[0] = x;
+		triangle.xpoints[1] = x2;
 		triangle.xpoints[2] = x3;
+
+		triangle.ypoints[0] = y;
+		triangle.ypoints[1] = y2;
 		triangle.ypoints[2] = y3;
 
 		triangle.invalidate();
@@ -126,8 +154,7 @@ public class Triangle extends Figure {
 	}
 
 	public boolean resizeContains(int x, int y) {
-		//this.x - handle_gap,
-		//this.y - handle_gap,
+		vertex = 0;
 
                 Rectangle2D rectangle1 = new Rectangle2D.Double(
                         this.x - handle_gap,
@@ -149,12 +176,15 @@ public class Triangle extends Figure {
 		);
 	
 		if (rectangle1.contains(x,y)) {
+			vertex = 1;
 			return true;
 		}
 		else if (rectangle2.contains(x,y)) {
+			vertex = 2;
 			return true;
 		}
 		else if (rectangle3.contains(x,y)) {
+			vertex = 3;
 			return true;
 		}
 		else {

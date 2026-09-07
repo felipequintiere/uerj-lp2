@@ -41,8 +41,8 @@ public class Line extends Figure {
 		AffineTransform saveAT = g2d.getTransform();
 		g2d.rotate(
 			angle,
-			(x+x2)/2.0,
-			(y+y2)/2.0
+			(x + x2)/2.0,
+			(y + y2)/2.0
 		);
 
 		g2d.setColor(borderColor);
@@ -55,8 +55,8 @@ public class Line extends Figure {
 		AffineTransform saveAT = g2d.getTransform();
 		g2d.rotate(
 			angle,
-			(x+x2)/2.0,
-			(y+y2)/2.0
+			(x + x2)/2.0,
+			(y + y2)/2.0
 		);
 
 		g2d.setColor(color);
@@ -70,8 +70,8 @@ public class Line extends Figure {
 		AffineTransform saveAT = g2d.getTransform();
 		g2d.rotate(
 			angle,
-			(x+x2)/2.0,
-			(y+y2)/2.0
+			(x + x2)/2.0,
+			(y + y2)/2.0
 		);
 
 		g2d.setColor(color);
@@ -88,21 +88,23 @@ public class Line extends Figure {
 		g2d.setColor(color);
 		g2d.setStroke(stroke);
 		g2d.drawRect(
-			x2-handle_gap,
-			y2-handle_gap,
-			2*handle_gap,
-			2*handle_gap
+			x2 - handle_gap,
+			y2 - handle_gap,
+			2 * handle_gap,
+			2 * handle_gap
 		);
 
 		g2d.setTransform(saveAT);
 
 		// posição real do handle
+		/*
 		g2d.drawRect(
 			x2-handle_gap,
 			y2-handle_gap,
 			2*handle_gap,
 			2*handle_gap
 		);
+		*/
 	}
 
 	public boolean resizeContains(int x, int y) {
