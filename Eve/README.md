@@ -1,4 +1,6 @@
 ### EVE - EDITOR VETORIAL
+Este repositório contém arquivos referentes ao trabalho realizado para obtenção de nota parcial na disciplina de Linguagem de Programação 2 (LP2), do curso de ciência da computação da Universidade do Estado do Rio de Janeiro (UERJ).
+&nbsp;
 
 #### Domínio da Aplicação
 O **Eve** é um editor vetorial desenvolvido em Java utilizando Java2D. O programa permite criar, remover e manipular diferentes tipos de figuras geométricas.
@@ -14,8 +16,10 @@ javac Eve.java
 
 NOTA: execute com  
 ```
-java Eve`
+java Eve
 ```
+
+---
 
 #### Figuras Disponíveis
 `Q` Linha  
