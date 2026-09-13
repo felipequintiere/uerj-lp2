@@ -3,6 +3,9 @@ package figures;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
 public class Text extends Figure {
 	private String text;
 	private int size;
@@ -140,4 +143,23 @@ public class Text extends Figure {
 			y >= this.y - height - handle_gap - 2 &&
 			y <= this.y - height + 2 * handle_gap;
 	}
+
+        public void changeColor(JFrame frame) {
+		// ignore
+                String string;
+                int hex;
+
+                string = JOptionPane.showInputDialog(
+                        frame, "Selecione a cor de contorno (R G B):"
+                );
+                hex = Integer.parseInt(string, 16);
+                this.setBorderColor(new Color(hex));
+
+
+                string = JOptionPane.showInputDialog(
+                        frame, "Selecione a cor de fundo (R G B):"
+                );
+                hex = Integer.parseInt(string, 16);
+                this.setFillColor(new Color(hex));
+        }
 }
