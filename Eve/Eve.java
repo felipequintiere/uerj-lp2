@@ -203,6 +203,30 @@ class EveFrame extends JFrame {
 								"SansSerif"
 							));
 							break;
+						case KeyEvent.VK_1:
+							figs.add(new Carro(
+								mouseX, mouseY,
+								100, 60)
+							);
+
+						case KeyEvent.VK_2:
+							int i = figs.indexOf(focus);
+
+							if (figs.isEmpty()) {
+								return;
+							}
+
+							if (focus == null ||
+									(index = figs.indexOf(focus)) == 0) {
+								focus = figs.get(0);
+							}
+							else {
+								index = (index - 1 + figs.size()) % figs.size();
+								focus = figs.get(index);
+							}
+
+							break;
+							);
 
 
 						//V20j:s/30/10/gc

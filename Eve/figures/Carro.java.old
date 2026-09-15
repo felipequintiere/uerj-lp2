@@ -1,0 +1,20 @@
+package figures;
+
+import java.awt.*;
+import java.awt.geom.Rectangle2D;
+import java.awt.geom.AffineTransform;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
+public class Carro extends Figure {
+	private int width;
+	private int height;
+
+	Rect chassi;
+	Ellipse roda1, roda2;
+
+	public Carro(int x, int y, int width, int height) {
+		//super(x,y);
+	}
+}
