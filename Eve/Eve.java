@@ -203,30 +203,39 @@ class EveFrame extends JFrame {
 								"SansSerif"
 							));
 							break;
+
+						// questao 1 [ item b ]
 						case KeyEvent.VK_1:
 							figs.add(new Carro(
 								mouseX, mouseY,
 								100, 60)
 							);
+							break;
 
+						// questao 2
 						case KeyEvent.VK_2:
+							// indice do elemento em foco 
 							int i = figs.indexOf(focus);
 
+							// se nao tiver elemento na lista heterogenea
 							if (figs.isEmpty()) {
 								return;
-							}
-
-							if (focus == null ||
-									(index = figs.indexOf(focus)) == 0) {
-								focus = figs.get(0);
-							}
-							else {
-								index = (index - 1 + figs.size()) % figs.size();
-								focus = figs.get(index);
+							} else {
+								// se nenhuma figura estiver selecionada, o foco `e
+								// passado para o primeiro elemento da lista
+								if (focus == null) {
+									focus = figs.get(0);
+								}
+								// passa o foco para o elemento de indice sucessor;
+								// a operacao de modulo e utilizada para evitar que
+								// ultrapasse o numero de elementos da lista
+								else {
+								
+									focus = figs.get((i+1) % figs.size());
+								}
 							}
 
 							break;
-							);
 
 
 						//V20j:s/30/10/gc

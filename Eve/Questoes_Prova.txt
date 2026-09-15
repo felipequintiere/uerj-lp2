@@ -1,0 +1,28 @@
+questão 1:
+
+[a] ./figures/Carro.java
+L16
+
+[b] ./Eve.java
+L207
+
+[c]
+L76 ./Eve.java
+    quando o ponteiro é movimentado [public void MouseMoved(MouseEvent e) {...}]
+    um teste é feito para determinar se a posição atual do ponteiro coincide
+    com a de um objeto - se sim, o foco recebe aquele objeto -
+
+L44 ./figures/Carro.java - método contains -
+    se qualquer um dos três objetos do Carro estiver sob o ponteiro, então
+    o método 'contains' retorna verdadeiro
+
+L54 ./figures/Carro.java - método drag -
+
+[d]
+as demais operações listadas continuam funcionando
+
+-----
+
+questão 2:
+[a,b,c]
+L215 ./Eve.java
