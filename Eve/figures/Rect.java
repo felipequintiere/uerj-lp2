@@ -28,6 +28,16 @@ public class Rect extends Figure {
 
 		return rectangle.contains(x,y);
 	}
+	public boolean clicked(int x, int y) {
+		Rectangle2D rectangle = new Rectangle2D.Double(
+			this.x,
+			this.y,
+			width,
+			height
+		);
+
+		return rectangle.contains(x,y);
+	}
 
 	public void drag(int dx, int dy) {
 		super.x += dx;

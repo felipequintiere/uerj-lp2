@@ -32,6 +32,19 @@ public class Text extends Figure {
 			y >= this.y - height &&
 			y <= this.y;
 	}
+	public boolean clicked(int x, int y) {
+		Font font = new Font(face, Font.PLAIN, size);
+
+		FontMetrics metrics = new Canvas().getFontMetrics(font);
+
+		int width = metrics.stringWidth(text);
+		int height = metrics.getHeight();
+
+		return x >= this.x &&
+			x <= this.x + width &&
+			y >= this.y - height &&
+			y <= this.y;
+	}
 
 	public void drag(int dx, int dy) {
 		this.x += dx;

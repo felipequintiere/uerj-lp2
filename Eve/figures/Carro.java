@@ -50,6 +50,15 @@ public class Carro extends Figure {
 			roda1.contains(x,y) ||
 			roda2.contains(x,y);
 	}
+	public boolean clicked(int x, int y) {
+		// se pelo menos um dos objetos constituintes
+		// do objeto carro retornar true quando
+		// testado pela posição do ponteiro, então
+		// esse objeto contém a posição atual do mouse
+		return chassi.contains(x,y) ||
+			roda1.contains(x,y) ||
+			roda2.contains(x,y);
+	}
 
 	public void drag(int dx, int dy) {
 		super.x += dx;

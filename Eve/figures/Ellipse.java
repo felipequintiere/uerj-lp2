@@ -33,6 +33,14 @@ public class Ellipse extends Figure {
 			height
 		).contains(x, y);
 	}
+	public boolean clicked(int x, int y) {
+		return new Ellipse2D.Double(
+			this.x,
+			this.y,
+			width,
+			height
+		).contains(x, y);
+	}
 
         public void resize(int dx, int dy) {
                 this.width += dx;

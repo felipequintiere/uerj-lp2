@@ -32,6 +32,13 @@ public class Line extends Figure {
 		// retorna 'true'
 		return line.ptSegDist(x, y) <= 5;
 	}
+	public boolean clicked(int x, int y) {
+		Line2D line = new Line2D.Double(this.x, this.y, x2, y2);
+
+		// se a distância do mouse até a reta for menor ou igual a 5,
+		// retorna 'true'
+		return line.ptSegDist(x, y) <= 5;
+	}
 
         public void resize(int dx, int dy) {
                 x2 += dx;

@@ -1,11 +1,13 @@
 package figures;
 
+import ivisible.IVisible;
+
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 
 import javax.swing.JFrame;
 
-public abstract class Figure {
+public abstract class Figure implements IVisible {
 	protected int x;
 	protected int y;
 
@@ -26,6 +28,7 @@ public abstract class Figure {
 	}
 
 	public abstract boolean contains(int x, int y);
+	public abstract boolean clicked(int x, int y);
 
 	public abstract void drag(int dx, int dy);
 

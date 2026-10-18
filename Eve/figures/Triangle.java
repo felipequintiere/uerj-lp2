@@ -31,6 +31,9 @@ public class Triangle extends Figure {
 	public boolean contains(int x, int y) {
 		return triangle.contains(x, y);
 	}
+	public boolean clicked(int x, int y) {
+		return triangle.contains(x, y);
+	}
 
 	public void drag(int dx, int dy) {
 		x += dx;

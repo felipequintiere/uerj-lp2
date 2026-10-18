@@ -57,13 +57,12 @@ class EveFrame extends JFrame {
 					mouseY = e.getY();
 
 					if (resizing) {
-						focus.resize(dx,dy);
+						focus.resize(dx, dy);
+					} else {
+						focus.drag(dx, dy);
 					}
-					else {
-						focus.drag(dx,dy);
-					}
-					repaint();
 
+					repaint();
 				}
 
 				public void mouseMoved(MouseEvent e) {
@@ -74,7 +73,7 @@ class EveFrame extends JFrame {
 					boolean foundHover = false;
 
 					for (Figure fig : figs) {
-						if (fig.contains(e.getX(), e.getY())) {
+						if (fig.clicked(e.getX(), e.getY())) {
 							hover = fig;
 							foundHover = true;
 						}
@@ -103,7 +102,7 @@ class EveFrame extends JFrame {
 						else if (hover == null) {
 							focus = null;
 						}
-						else if (hover.contains(e.getX(), e.getY())) {
+						else if (hover.clicked(e.getX(), e.getY())) {
 							focus = hover;
 						}
 					}
@@ -111,7 +110,7 @@ class EveFrame extends JFrame {
 						if (hover == null) {
 							focus = null;
 						}
-						else if (hover.contains(e.getX(), e.getY())) {
+						else if (hover.clicked(e.getX(), e.getY())) {
 							focus = hover;
 							resizing = true;
 						}
