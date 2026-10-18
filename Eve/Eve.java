@@ -24,8 +24,6 @@ class EveFrame extends JFrame {
 
 	int mouseX;
 	int mouseY;
-	int dx;
-	int dy;
 
 	int index; // index da lista heterogênea
 
@@ -50,8 +48,8 @@ class EveFrame extends JFrame {
 						return;
 					}
 
-					dx = e.getX() - mouseX;
-					dy = e.getY() - mouseY;
+					int dx = e.getX() - mouseX;
+					int dy = e.getY() - mouseY;
 
 					mouseX = e.getX();
 					mouseY = e.getY();
@@ -69,23 +67,17 @@ class EveFrame extends JFrame {
 					mouseX = e.getX();
 					mouseY = e.getY();
 
-					Figure aux_hover = hover;
-					boolean foundHover = false;
+					Figure oldHover = hover;
+					hover = null;
 
 					for (Figure fig : figs) {
-						if (fig.clicked(e.getX(), e.getY())) {
+						//if (fig.clicked(e.getX(), e.getY()) == true) {
+						if (fig.contains(e.getX(), e.getY()) == true) {
 							hover = fig;
-							foundHover = true;
 						}
 					}
 
-					if (aux_hover != hover) {
-						repaint();
-					}
-					// remover a borda azul quando o ponteiro não estiver
-					// sobre um objeto
-					else if (aux_hover != null && !foundHover) {
-						hover = null;
+					if (oldHover != hover) {
 						repaint();
 					}
 				}
