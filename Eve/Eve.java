@@ -260,13 +260,21 @@ class EveFrame extends JFrame {
 						case KeyEvent.VK_DELETE:
 						case KeyEvent.VK_BACK_SPACE:
 							if (focus != null) {
-								figs.remove(focus);
+								Figure removedFigure = focus;
 
-								if (hover == focus) {
+								if (figs.size() >= 2) {
+									changeFocus();
+								}
+								else {
+									focus = null;
+								}
+
+								figs.remove(removedFigure);
+
+								if (hover == removedFigure) {
 									hover = null;
 								}
 							}
-							focus = null;
 							break;
 						case KeyEvent.VK_O:
 							index = figs.indexOf(focus);
