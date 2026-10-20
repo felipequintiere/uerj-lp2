@@ -60,8 +60,9 @@ public class Ellipse extends Figure {
 
 		g2d.setColor(super.HOVER_COLOR);
 		g2d.setStroke(super.HOVER_STROKE);
-		g2d.drawRect(x, y, width, height);
+		g2d.drawOval(x, y, width, height);
 		//g2d.draw(new Ellipse2D.Double(x, y, width, height));
+		//g2d.drawRect(x, y, width, height);
 
 		g2d.setTransform(saveAT);
 	}

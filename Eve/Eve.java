@@ -91,16 +91,50 @@ class EveFrame extends JFrame {
 					}
 
 					// funcionalidade de hover
-					// if (oldHover != hover) {
-					// 	repaint();
-					// }
+					if (oldHover != hover) {
+						repaint();
+					}
 				}
 			}
 		);
 		this.addMouseListener(
 			new MouseAdapter() {
 				public void mousePressed(MouseEvent e) {
-					if (e.getButton() == MouseEvent.BUTTON1) {
+					if (e.getButton() == MouseEvent.BUTTON1 && focusButton != null) {
+						switch (focusButton.index) {
+						case 0: 
+							figs.add(new Line(
+									  mouseX, mouseY,
+									  mouseX+100, mouseY+60)
+								);
+							break;
+						case 1:
+							figs.add(new Triangle(
+								mouseX, mouseY,
+								mouseX - 50, mouseY + 50,
+								mouseX + 50, mouseY + 50)
+							);
+							break;
+						case 2:
+							figs.add(new Ellipse(
+								mouseX, mouseY,
+								100, 60)
+							);
+							break;
+						case 3:
+							figs.add(new Rect(
+								mouseX, mouseY,
+								100, 60)
+							);
+							break;
+						case 4:
+							break;
+						}
+
+						focusButton = null;
+						repaint();
+					}
+					else if (e.getButton() == MouseEvent.BUTTON1) {
 						for (Button button : buttons) {
 							if (button.clicked(e.getX(), e.getY())) {
 								focusButton = button;
@@ -340,18 +374,21 @@ class EveFrame extends JFrame {
 	
 		// desenha todas as figuras normalmente
 		for (Figure fig : figs) {
-			fig.paint(g2d, fig == focus);
+			fig.paint(g2d, false);
 		}
 
-		// desenha o handle por cima de todas as figuras
+		// desenha o foco e o handle por cima de todas as figuras
 		if (focus != null) {
+			//focus.paint(g2d, true);
+			focus.paintFocus(g2d);
 			focus.paintHandle(g2d);
 		}
+
 		// funcionalidade de hover
-		//if (hover != null && hover != focus) {
-		// if (hover != null) {
-		// 	hover.paintHover(g2d);
-		// }
+		//if (hover != null) {
+		if (hover != null && hover != focus) {
+			hover.paintHover(g2d);
+		}
 		
 		for (Button button : buttons) {
 			button.paint(g2d, button == focusButton);

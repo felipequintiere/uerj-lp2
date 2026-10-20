@@ -19,13 +19,14 @@ public class Button implements IVisible {
 		this.index = index;
 		y += index * (height+1);
 
-		switch(index) {
+		switch (index) {
 		case 0: 
 			figure = new Line(
 					  x + 5, y + 5,
 					  x + width - 5, y + height - 5
 					 );
 			break;
+
 		case 1:
 			figure = new Triangle(
 					      (x + width)/2 + 5, y + 5,
