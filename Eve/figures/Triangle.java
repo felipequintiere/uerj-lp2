@@ -135,7 +135,7 @@ public class Triangle extends Figure {
 
 
 		g2d.setColor(super.HOVER_COLOR);
-		g2d.setStroke(super.HOVER_STROKE);
+		g2d.setStroke(new BasicStroke(2.0f));
 		g2d.drawPolygon(triangle);
 
 
@@ -143,7 +143,7 @@ public class Triangle extends Figure {
 	}
 	public void paintFocus(Graphics2D g2d) {
 		g2d.setColor(super.FOCUS_COLOR);
-		g2d.setStroke(super.FOCUS_STROKE);
+		g2d.setStroke(new BasicStroke(2.0f));
 		g2d.drawPolygon(triangle);
 	}
 	public void paintHandle(Graphics2D g2d) {
@@ -184,7 +184,7 @@ public class Triangle extends Figure {
 		g2d.fillPolygon(triangle);
 
 		g2d.setColor(super.borderColor);
-		g2d.setStroke(super.stroke);
+		g2d.setStroke(new BasicStroke(2.0f));
 		g2d.drawPolygon(triangle);
 
 		if (focused) {

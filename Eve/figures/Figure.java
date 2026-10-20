@@ -16,24 +16,25 @@ public abstract class Figure implements IVisible, Serializable {
 
 	protected Color fillColor = Color.WHITE;
 	protected Color borderColor = Color.BLACK;
-	protected BasicStroke stroke = new BasicStroke(2.0f);
+	//protected BasicStroke stroke = new BasicStroke(2.0f);
 
 	protected int handle_gap = 10;
 
 
 	protected static final Color FOCUS_COLOR = Color.RED;
-	protected static final BasicStroke FOCUS_STROKE =
-		new BasicStroke(2.0f);
+	// protected static final BasicStroke FOCUS_STROKE =
+	// 	new BasicStroke(2.0f);
+
 	protected static final Color HOVER_COLOR = Color.BLUE;
-	protected static final BasicStroke HOVER_STROKE =
-		new BasicStroke(
-			3.0f,
-			BasicStroke.CAP_BUTT,
-			BasicStroke.JOIN_MITER,
-			10.0f,
-			new float[] {5.0f, 5.0f},
-			0.0f
-		);
+	// protected static final BasicStroke HOVER_STROKE =
+	// 	new BasicStroke(
+	// 		3.0f,
+	// 		BasicStroke.CAP_BUTT,
+	// 		BasicStroke.JOIN_MITER,
+	// 		10.0f,
+	// 		new float[] {5.0f, 5.0f},
+	// 		0.0f
+	// 	);
 
 
 	public Figure(int x, int y) {

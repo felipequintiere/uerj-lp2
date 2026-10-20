@@ -59,7 +59,7 @@ public class Rect extends Figure {
 
 
 		g2d.setColor(super.HOVER_COLOR);
-		g2d.setStroke(super.HOVER_STROKE);
+		g2d.setStroke(new BasicStroke(2.0f));
 		g2d.drawRect(x, y, width, height);
 
 
@@ -67,7 +67,7 @@ public class Rect extends Figure {
 	}
 	public void paintFocus(Graphics2D g2d) {
 		g2d.setColor(super.FOCUS_COLOR);
-		g2d.setStroke(super.FOCUS_STROKE);
+		g2d.setStroke(new BasicStroke(2.0f));
 		g2d.drawRect(x, y, width, height);
 	}
 	public void paintHandle(Graphics2D g2d) {
@@ -97,7 +97,7 @@ public class Rect extends Figure {
 		g2d.fillRect(x, y, width, height);
 
 		g2d.setColor(super.borderColor);
-		g2d.setStroke(super.stroke);
+		g2d.setStroke(new BasicStroke(2.0f));
 		g2d.drawRect(x, y, width, height);
 
 		if (focused) {

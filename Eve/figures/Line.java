@@ -62,7 +62,7 @@ public class Line extends Figure {
 
 
 		g2d.setColor(super.HOVER_COLOR);
-		g2d.setStroke(super.HOVER_STROKE);
+		g2d.setStroke(new BasicStroke(2.0f));
 		g2d.draw(new Line2D.Double(x, y, x2, y2));
 
 
@@ -70,7 +70,7 @@ public class Line extends Figure {
 	}
 	public void paintFocus(Graphics2D g2d) {
 		g2d.setColor(super.FOCUS_COLOR);
-		g2d.setStroke(super.FOCUS_STROKE);
+		g2d.setStroke(new BasicStroke(2.0f));
 		g2d.draw(new Line2D.Double(x, y, x2, y2));
 		//g2d.drawRect(x, y, x2 - x, y2 - y); // mais complexo
 	}
@@ -100,7 +100,7 @@ public class Line extends Figure {
 
 
 		g2d.setColor(super.borderColor);
-		g2d.setStroke(super.stroke);
+		g2d.setStroke(new BasicStroke(2.0f));
 		g2d.draw(new Line2D.Double(x, y, x2, y2));
 
 		if (focused) {
