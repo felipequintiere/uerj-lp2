@@ -34,7 +34,24 @@ class EveFrame extends JFrame {
 
 	int index; // index da lista heterogênea
 
+	@SuppressWarnings("unchecked")
 	public EveFrame() {
+
+
+		try {
+			FileInputStream f = new FileInputStream("proj.bin");
+			ObjectInputStream o = new ObjectInputStream(f);
+			this.figs = (ArrayList<Figure>) o.readObject();
+			o.close();
+
+			System.out.printf("Arquivo carregado\n");
+			this.repaint();
+		}
+		catch (Exception x) {
+			System.out.printf("Nenhum arquivo para ler\n");
+		}
+
+
 		this.setTitle("Eve - Editor Vetorial");
 		this.setSize(700, 700);
 		this.setVisible(true);
@@ -50,6 +67,20 @@ class EveFrame extends JFrame {
 		this.addWindowListener(
 			new WindowAdapter() {
 				public void windowClosing(WindowEvent e) {
+
+
+					try {
+						FileOutputStream f = new FileOutputStream("proj.bin");
+						ObjectOutputStream o = new ObjectOutputStream(f);
+						o.writeObject(figs);
+						o.flush();
+						o.close();
+
+						System.out.printf("Arquivo salvo\n");
+					}
+					catch (Exception x) {}
+
+
 					System.exit(0);
 				}
 			}
@@ -217,7 +248,7 @@ class EveFrame extends JFrame {
 						case KeyEvent.VK_Q:
 							figs.add(new Line(
 								mouseX, mouseY,
-								mouseX+100, mouseY+60)
+								mouseX + 100, mouseY + 60)
 							);
 							break;
 
@@ -283,7 +314,7 @@ class EveFrame extends JFrame {
 								// ultrapasse o numero de elementos da lista
 								else {
 								
-									focus = figs.get((i+1) % figs.size());
+									focus = figs.get((i + 1) % figs.size());
 								}
 							}
 
@@ -380,7 +411,7 @@ class EveFrame extends JFrame {
 		// desenha o foco e o handle por cima de todas as figuras
 		if (focus != null) {
 			//focus.paint(g2d, true);
-			focus.paintFocus(g2d);
+			focus.paintFocus(g2d); // problema com a rotação
 			focus.paintHandle(g2d);
 		}
 

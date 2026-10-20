@@ -16,7 +16,7 @@ public abstract class Figure implements IVisible, Serializable {
 
 	protected Color fillColor = Color.WHITE;
 	protected Color borderColor = Color.BLACK;
-	protected transient BasicStroke stroke = new BasicStroke(2.0f);
+	protected BasicStroke stroke = new BasicStroke(2.0f);
 
 	protected int handle_gap = 10;
 

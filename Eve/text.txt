@@ -1,0 +1,1349 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+import java.util.ArrayList;
+import java.util.Random;
+
+import java.awt.geom.AffineTransform;
+
+import figures.*;
+import ui.Button;
+
+import java.io.*;
+
+public class Eve {
+	public static void main(String[] args) {
+		EveFrame frame = new EveFrame();
+	}
+}
+
+class EveFrame extends JFrame {
+	ArrayList<Figure> figs = new ArrayList<Figure>();
+	ArrayList<Button> buttons = new ArrayList<Button>();
+	Button focusButton = null;
+
+	// focus/hover sobre objeto
+	Figure focus = null;
+	Figure hover = null;
+
+	boolean resizing = false;
+
+	int mouseX;
+	int mouseY;
+
+	int index; // index da lista heterog√™nea
+
+	public EveFrame() {
+		this.setTitle("Eve - Editor Vetorial");
+		this.setSize(700, 700);
+		this.setVisible(true);
+
+		// buttons.add(new Button(0)); 
+		buttons.add(new Button(0)); // line
+		buttons.add(new Button(1)); // triangle
+		buttons.add(new Button(2)); // ellipse
+		buttons.add(new Button(3)); // rect
+		//buttons.add(new Button(4)); // text
+
+		// fechar a janela
+		this.addWindowListener(
+			new WindowAdapter() {
+				public void windowClosing(WindowEvent e) {
+					System.exit(0);
+				}
+			}
+		);
+
+		this.addMouseMotionListener(
+			new MouseMotionAdapter() {
+				public void mouseDragged(MouseEvent e) {
+					if (focus == null) {
+						return;
+					}
+
+					int dx = e.getX() - mouseX;
+					int dy = e.getY() - mouseY;
+
+					mouseX = e.getX();
+					mouseY = e.getY();
+
+					if (resizing) {
+						focus.resize(dx, dy);
+					} else {
+						focus.drag(dx, dy);
+					}
+
+					repaint();
+				}
+
+				public void mouseMoved(MouseEvent e) {
+					mouseX = e.getX();
+					mouseY = e.getY();
+
+					Figure oldHover = hover;
+					hover = null;
+
+					for (Figure fig : figs) {
+						if (fig.clicked(e.getX(), e.getY()) == true) {
+							hover = fig;
+						}
+					}
+
+					// funcionalidade de hover
+					if (oldHover != hover) {
+						repaint();
+					}
+				}
+			}
+		);
+		this.addMouseListener(
+			new MouseAdapter() {
+				public void mousePressed(MouseEvent e) {
+					if (e.getButton() == MouseEvent.BUTTON1 && focusButton != null) {
+						switch (focusButton.index) {
+						case 0: 
+							figs.add(new Line(
+									  mouseX, mouseY,
+									  mouseX+100, mouseY+60)
+								);
+							break;
+						case 1:
+							figs.add(new Triangle(
+								mouseX, mouseY,
+								mouseX - 50, mouseY + 50,
+								mouseX + 50, mouseY + 50)
+							);
+							break;
+						case 2:
+							figs.add(new Ellipse(
+								mouseX, mouseY,
+								100, 60)
+							);
+							break;
+						case 3:
+							figs.add(new Rect(
+								mouseX, mouseY,
+								100, 60)
+							);
+							break;
+						case 4:
+							break;
+						}
+
+						focusButton = null;
+						repaint();
+					}
+					else if (e.getButton() == MouseEvent.BUTTON1) {
+						for (Button button : buttons) {
+							if (button.clicked(e.getX(), e.getY())) {
+								focusButton = button;
+							}
+						}
+
+						if (focus != null &&
+								focus.resizeClicked(e.getX(), e.getY())) {
+							resizing = true;
+						}
+						else if (hover == null) {
+							focus = null;
+						}
+						else if  (hover.clicked(e.getX(), e.getY())) {
+							focus = hover;
+						}
+					}
+					else if (e.getButton() == MouseEvent.BUTTON3) {
+						if (hover == null) {
+							focus = null;
+						}
+						else if (hover.clicked(e.getX(), e.getY())) {
+							focus = hover;
+							resizing = true;
+						}
+					}
+
+					repaint();
+				}
+				public void mouseReleased(MouseEvent e) {
+					resizing = false;
+				}
+			}
+		);
+		this.addMouseWheelListener(
+			new MouseWheelListener() {
+				public void mouseWheelMoved(MouseWheelEvent e) {
+					if (focus == null) {
+						return;
+					}
+
+					// negative values if the mouse wheel was
+					// rotated up or away from the user, and
+					// positive values if the mouse wheel was
+					// rotated down or towards the user
+					focus.rotate(e.getWheelRotation() / 20.0);
+					System.out.printf("%f\n", focus.getAngle());
+					repaint();
+				}
+			}
+		);
+
+		this.addKeyListener(
+			new KeyAdapter() {
+				public void keyPressed(KeyEvent e) {
+					if (e.isControlDown()) {
+						switch(e.getKeyCode()) {
+						case KeyEvent.VK_U:
+							index = figs.indexOf(focus);
+
+							if (index < figs.size() - 1) {
+								Figure tmp = figs.get(index);
+								figs.set(index, figs.get(index + 1));
+								figs.set(index + 1, tmp);
+							}
+							break;
+						case KeyEvent.VK_D:
+							index = figs.indexOf(focus);
+
+							if (index > 0) {
+								Figure tmp = figs.get(index);
+								figs.set(index, figs.get(index - 1));
+								figs.set(index - 1, tmp);
+							}
+							break;
+						}
+					}
+					else {
+						switch (e.getKeyCode()) {
+						case KeyEvent.VK_Q:
+							figs.add(new Line(
+								mouseX, mouseY,
+								mouseX + 100, mouseY + 60)
+							);
+							break;
+
+						case KeyEvent.VK_W:
+							figs.add(new Triangle(
+								mouseX, mouseY,
+								mouseX - 50, mouseY + 50,
+								mouseX + 50, mouseY + 50)
+							);
+							break;
+					
+						case KeyEvent.VK_E:
+							figs.add(new Ellipse(
+								mouseX, mouseY,
+								100, 60)
+							);
+							break;
+
+						case KeyEvent.VK_R:
+							figs.add(new Rect(
+								mouseX, mouseY,
+								100, 60)
+							);
+							break;
+							/*
+						case KeyEvent.VK_T:
+							figs.add(new Text(
+								mouseX,
+								mouseY,
+								"Texto",
+								30,
+								"SansSerif"
+							));
+							break;
+							*/
+
+						// questao 1 [ item b ]
+						/*
+						case KeyEvent.VK_1:
+							figs.add(new Carro(
+								mouseX, mouseY,
+								100, 60)
+							);
+							break;
+						*/
+
+						// questao 2
+						case KeyEvent.VK_2:
+							// indice do elemento em foco 
+							int i = figs.indexOf(focus);
+
+							// se nao tiver elemento na lista heterogenea
+							if (figs.isEmpty()) {
+								return;
+							} else {
+								// se nenhuma figura estiver selecionada, o foco `e
+								// passado para o primeiro elemento da lista
+								if (focus == null) {
+									focus = figs.get(0);
+								}
+								// passa o foco para o elemento de indice sucessor;
+								// a operacao de modulo e utilizada para evitar que
+								// ultrapasse o numero de elementos da lista
+								else {
+								
+									focus = figs.get((i + 1) % figs.size());
+								}
+							}
+
+							break;
+
+
+						//V20j:s/30/10/gc
+						case KeyEvent.VK_RIGHT:
+						case KeyEvent.VK_L:
+							if (focus != null) {
+								focus.drag(30, 0);
+							}
+							break;
+						case KeyEvent.VK_LEFT:
+						case KeyEvent.VK_H:
+							if (focus != null) {
+								focus.drag(-30, 0);
+							}
+							break;
+						case KeyEvent.VK_UP:
+						case KeyEvent.VK_K:
+							if (focus != null) {
+								focus.drag(0, -30);
+							}
+							break;
+						case KeyEvent.VK_DOWN:
+						case KeyEvent.VK_J:
+							if (focus != null) {
+								focus.drag(0, 30);
+							}
+							break;
+
+
+						case KeyEvent.VK_D:
+						case KeyEvent.VK_DELETE:
+						case KeyEvent.VK_BACK_SPACE:
+							if (focus != null) {
+								Figure removedFigure = focus;
+
+								if (figs.size() >= 2) {
+									changeFocus();
+								}
+								else {
+									focus = null;
+								}
+
+								figs.remove(removedFigure);
+
+								if (hover == removedFigure) {
+									hover = null;
+								}
+							}
+							break;
+						case KeyEvent.VK_O:
+							index = figs.indexOf(focus);
+							changeFocus();
+							break;
+						case KeyEvent.VK_C:
+							if (focus != null) {
+								focus.changeColor(EveFrame.this);
+							}
+							break;
+						}
+					}
+					repaint();
+				}
+			}
+		);
+	}
+	void changeFocus() {
+		if (figs.isEmpty()) {
+			return;
+		}
+
+		if (focus == null ||
+				(index = figs.indexOf(focus)) == 0) {
+			focus = figs.get(figs.size() - 1);
+		}
+		else {
+			index = (index - 1 + figs.size()) % figs.size();
+			focus = figs.get(index);
+		}
+	}
+
+	public void paint(Graphics g) {
+		super.paint(g);
+		Graphics2D g2d = (Graphics2D) g;
+	
+		// desenha todas as figuras normalmente
+		for (Figure fig : figs) {
+			fig.paint(g2d, false);
+		}
+
+		// desenha o foco e o handle por cima de todas as figuras
+		if (focus != null) {
+			//focus.paint(g2d, true);
+			focus.paintFocus(g2d); // problema com a rota√ß√£o
+			focus.paintHandle(g2d);
+		}
+
+		// funcionalidade de hover
+		//if (hover != null) {
+		if (hover != null && hover != focus) {
+			hover.paintHover(g2d);
+		}
+		
+		for (Button button : buttons) {
+			button.paint(g2d, button == focusButton);
+		}
+	}
+}
+ ˛∫æ   G ú
+      figures/Figure <init> (II)V	  	 
+   figures/Ellipse width I	     height  java/awt/geom/Ellipse2D$Double	     x	     y
+     (DDDD)V
+     contains (DD)Z    java/awt/geom/Rectangle2D$Double	  " #  
+handle_gap
+  
+ &  ' java/awt/geom/Rectangle2D
+ ) * + , - java/awt/Graphics2D getTransform !()Ljava/awt/geom/AffineTransform;	  / 0 1 angle D
+ ) 3 4 5 rotate (DDD)V	  7 8 9 HOVER_COLOR Ljava/awt/Color;
+ ) ; < = setColor (Ljava/awt/Color;)V	  ? @ A HOVER_STROKE Ljava/awt/BasicStroke;
+ ) C D E 	setStroke (Ljava/awt/Stroke;)V
+ ) G H I drawOval (IIII)V
+ ) K L M setTransform "(Ljava/awt/geom/AffineTransform;)V	  O P 9 FOCUS_COLOR	  R S A FOCUS_STROKE U java/awt/BasicStroke
+ T W  X (F)V
+ ) Z [ I drawRect	  ] ^ 9 	fillColor
+ ) ` a I fillOval	  c d 9 borderColor	  f g A stroke
+  i j k 
+paintFocus (Ljava/awt/Graphics2D;)V m $Selecione a cor de contorno (R G B):
+ o p q r s javax/swing/JOptionPane showInputDialog :(Ljava/awt/Component;Ljava/lang/Object;)Ljava/lang/String;
+ u v w x y java/lang/Integer parseInt (Ljava/lang/String;I)I { java/awt/Color
+ z }  ~ (I)V
+  Ä Å = setBorderColor É !Selecione a cor de fundo (R G B):
+  Ö Ü = setFillColor Code LineNumberTable clicked (II)Z resizeClicked resize StackMapTable 
+paintHover paintHandle paint (Ljava/awt/Graphics2D;Z)V ì java/awt/geom/AffineTransform changeColor (Ljavax/swing/JFrame;)V 
+SourceFile Ellipse.java InnerClasses ö java/awt/geom/Ellipse2D Double !                	   I  á   6     *∑ *µ *µ ±    à               â ä  á   C 
+    #ª Y*¥ á*¥ á*¥ á*¥ á∑ áá∂ ¨    à          "   ã ä  á   Y 
+    =ª Y*¥ *¥ `*¥ !dá*¥ *¥ `*¥ !dá*¥ !há*¥ !há∑ $N-áá∂ %¨    à   
+      4 '  å   á   i     /*Y¥ `µ *Y¥ `µ *¥ ¢ *µ *¥ ¢ *µ ±    à       + 
+ ,  .  / ! 2 ) 3 . 5 ç    !  é k  á   }     M+∂ (M+*¥ .*¥ *¥ l`á*¥ *¥ l`á∂ 2+≤ 6∂ :+≤ >∂ B+*¥ *¥ *¥ *¥ ∂ F+,∂ J±    à       9  : % = , > 3 ? G C L D  j k  á   G     #+≤ N∂ :+≤ Q∂ B+*¥ *¥ *¥ *¥ ∂ F±    à       F  G  H " I  è k  á   ö     j+∂ (M+*¥ .*¥ *¥ l`á*¥ *¥ l`á∂ 2+≤ 6∂ :+ª TY∑ V∂ B+*¥ *¥ `*¥ !d*¥ *¥ `*¥ !d*¥ !h*¥ !h∂ Y+,∂ J±    à       L  M % P , Q 8 S d [ i \  ê ë  á   ¬     t+∂ (N+*¥ .*¥ *¥ l`á*¥ *¥ l`á∂ 2+*¥ \∂ :+*¥ *¥ *¥ *¥ ∂ _+*¥ b∂ :+*¥ e∂ B+*¥ *¥ *¥ *¥ ∂ Fô *+∂ h+-∂ J±    à   .    ^  _ % b - c A e I f Q g e i i j n n s o ç    ¸ n í  î ï  á   e     5+l∏ nM,∏ t>*ª zY∑ |∂ +Ç∏ nM,∏ t>*ª zY∑ |∂ Ñ±    à       v  y  z  } ! Ä ( Å 4 Ç  ñ    ó ò      ô õ 	  & õ 	package figures;
+
+import java.awt.*;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Ellipse2D.Double;
+import java.awt.geom.Rectangle2D;
+import java.awt.geom.AffineTransform;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
+public class Ellipse extends Figure {
+	private int width;
+	private int height;
+
+
+	public Ellipse(int x, int y, int width, int height) {
+		super(x,y);
+
+		this.width = width;
+		this.height = height;
+	}
+
+
+	public boolean clicked(int x, int y) {
+		return new Ellipse2D.Double(
+			this.x, this.y,
+			width, height
+		).contains(x, y);
+	}
+	public boolean resizeClicked(int x, int y) {
+		Rectangle2D rectangle = new Rectangle2D.Double(
+			this.x + width - super.handle_gap,
+			this.y + height - super.handle_gap,
+			2 * super.handle_gap,
+			2 * super.handle_gap
+		);
+
+		return rectangle.contains(x,y);
+	}
+
+        public void resize(int dx, int dy) {
+                this.width += dx;
+                this.height += dy;
+
+                if (width < 5) {
+                        width = 5;
+		}
+
+                if (height < 5) {
+                        height = 5;
+		}
+        }
+
+
+	public void paintHover(Graphics2D g2d) {
+		AffineTransform saveAT = g2d.getTransform();
+		g2d.rotate(super.angle, x + (width/2), y + (height/2));
+
+
+		g2d.setColor(super.HOVER_COLOR);
+		g2d.setStroke(super.HOVER_STROKE);
+		g2d.drawOval(x, y, width, height);
+		//g2d.draw(new Ellipse2D.Double(x, y, width, height));
+		//g2d.drawRect(x, y, width, height);
+
+		g2d.setTransform(saveAT);
+	}
+	public void paintFocus(Graphics2D g2d) {
+		g2d.setColor(super.FOCUS_COLOR);
+		g2d.setStroke(super.FOCUS_STROKE);
+		g2d.drawOval(x, y, width, height);
+	}
+
+	public void paintHandle(Graphics2D g2d) {
+		AffineTransform saveAT = g2d.getTransform();
+		g2d.rotate(super.angle, x + (width/2), y + (height/2));
+
+
+		g2d.setColor(super.HOVER_COLOR);
+		g2d.setStroke(new BasicStroke(2.0f));
+		//g2d.setStroke(super.HOVER_STROKE);
+		g2d.drawRect(
+			x + width - super.handle_gap,
+			y + height - super.handle_gap,
+			2 * super.handle_gap,
+			2 * super.handle_gap
+		);
+
+
+		g2d.setTransform(saveAT);
+	}
+	public void paint(Graphics2D g2d, boolean focused) {
+		AffineTransform saveAT = g2d.getTransform();
+		g2d.rotate(super.angle, x + (width/2), y + (height/2));
+
+
+		g2d.setColor(super.fillColor);
+		g2d.fillOval(x, y, width, height);
+
+		g2d.setColor(super.borderColor);
+		g2d.setStroke(super.stroke);
+		g2d.drawOval(x, y, width, height);
+
+		if (focused) {
+			paintFocus(g2d);
+		}
+
+
+		g2d.setTransform(saveAT);
+	}
+
+
+        public void changeColor(JFrame frame) {
+                String string;
+                int hex;
+
+                string = JOptionPane.showInputDialog(
+                        frame, "Selecione a cor de contorno (R G B):"
+                );
+                hex = Integer.parseInt(string, 16);
+                this.setBorderColor(new Color(hex));
+
+
+                string = JOptionPane.showInputDialog(
+                        frame, "Selecione a cor de fundo (R G B):"
+                );
+                hex = Integer.parseInt(string, 16);
+                this.setFillColor(new Color(hex));
+        }
+}
+ ˛∫æ   G e
+      java/lang/Object <init> ()V	  	 
+   figures/Figure angle D	      java/awt/Color WHITE Ljava/awt/Color;	     	fillColor	     BLACK	     borderColor  java/awt/BasicStroke
+      (F)V	  " # $ stroke Ljava/awt/BasicStroke;	  & ' ( 
+handle_gap I	  * + ( x	  - . ( y	  0 1  RED	  3 4  FOCUS_COLOR	  6 7 $ FOCUS_STROKE	  9 :  BLUE	  < =  HOVER_COLOR@@  A   @†  
+  B  C 
+(FIIF[FF)V	  E F $ HOVER_STROKE H ivisible/IVisible J java/io/Serializable (II)V Code LineNumberTable drag rotate (D)V clicked (II)Z resizeClicked resize 
+paintHover (Ljava/awt/Graphics2D;)V 
+paintFocus paintHandle paint (Ljava/awt/Graphics2D;Z)V changeColor (Ljavax/swing/JFrame;)V setBorderColor (Ljava/awt/Color;)V setFillColor getAngle ()D <clinit> 
+SourceFile Figure.java!    G I   + (    . (                  Ñ # $    ' (    4     7 $    =     F $      K  L   l     4*∑ *µ *≤ µ *≤ µ *ª Y∑ µ !*
+µ %*µ )*µ ,±    M   & 	   '   	      #  ) ( . ) 3 *  N K  L   5     *Y¥ )`µ )*Y¥ ,`µ ,±    M       . 
+ /  1  O P  L   '     *Y¥ 'cµ ±    M   
+    4 
+ 5 Q R   S R   T K   U V   W V   X V   Y Z   [ \    ] ^  L   "     *+µ ±    M   
+    G  H  _ ^  L   "     *+µ ±    M   
+    K  L  ` a  L        *¥ Ø    M       O  b   L   Z 
+     6≤ /≥ 2ª Y∑ ≥ 5≤ 8≥ ;ª Y>?ºY@QY@Q∑ A≥ D±    M               c    dpackage figures;
+
+import ivisible.IVisible;
+
+import java.awt.*;
+import java.awt.geom.AffineTransform;
+
+import javax.swing.JFrame;
+
+import java.io.*;
+
+public abstract class Figure implements IVisible, Serializable {
+	protected int x;
+	protected int y;
+	protected double angle = 0;
+
+	protected Color fillColor = Color.WHITE;
+	protected Color borderColor = Color.BLACK;
+	protected transient BasicStroke stroke = new BasicStroke(2.0f);
+
+	protected int handle_gap = 10;
+
+
+	protected static final Color FOCUS_COLOR = Color.RED;
+	protected static final BasicStroke FOCUS_STROKE =
+		new BasicStroke(2.0f);
+	protected static final Color HOVER_COLOR = Color.BLUE;
+	protected static final BasicStroke HOVER_STROKE =
+		new BasicStroke(
+			3.0f,
+			BasicStroke.CAP_BUTT,
+			BasicStroke.JOIN_MITER,
+			10.0f,
+			new float[] {5.0f, 5.0f},
+			0.0f
+		);
+
+
+	public Figure(int x, int y) {
+		this.x = x;
+		this.y = y;
+	}
+
+
+	public void drag(int dx, int dy) {
+		this.x += dx;
+		this.y += dy;
+		// @Override em Line.java, Triangle.java
+	}
+
+	public void rotate(double delta) {
+		this.angle += delta;
+	}
+
+
+	public abstract boolean clicked(int x, int y);
+	public abstract boolean resizeClicked(int x, int y);
+
+	public abstract void resize(int dx, int dy);
+
+	public abstract void paintHover(Graphics2D g2d);
+	public abstract void paintFocus(Graphics2D g2d);
+	public abstract void paintHandle(Graphics2D g2d);
+	public abstract void paint(Graphics2D g2d, boolean focused);
+
+	public abstract void changeColor(JFrame frame);
+
+
+	// setter de cor de contorno
+	public void setBorderColor(Color color) {
+		this.borderColor = color;
+	}
+	// setter de cor de preenchimento
+	public void setFillColor(Color color) {
+		this.fillColor = color;
+	}
+
+	public double getAngle() {
+		return this.angle;
+	}
+}
+ ˛∫æ   G ù
+      figures/Figure <init> (II)V	  	 
+   figures/Line x2 I	     y2	     x	     y  java/awt/geom/Line2D$Double
+     (DDDD)V
+       java/awt/geom/Line2D 	ptSegDist (DD)D@       $  java/awt/geom/Rectangle2D$Double	  & '  
+handle_gap
+ # 
+ * + , - . java/awt/geom/Rectangle2D contains (DD)Z
+ 0 1 2 3 4 java/awt/Graphics2D getTransform !()Ljava/awt/geom/AffineTransform;	  6 7 8 angle D	  @       	  
+ 0 > ? @ rotate (DDD)V	  B C D HOVER_COLOR Ljava/awt/Color;
+ 0 F G H setColor (Ljava/awt/Color;)V	  J K L HOVER_STROKE Ljava/awt/BasicStroke;
+ 0 N O P 	setStroke (Ljava/awt/Stroke;)V
+ 0 R S T draw (Ljava/awt/Shape;)V
+ 0 V W X setTransform "(Ljava/awt/geom/AffineTransform;)V	  Z [ D FOCUS_COLOR	  ] ^ L FOCUS_STROKE ` java/awt/BasicStroke
+ _ b  c (F)V
+ 0 e f g drawRect (IIII)V	  6	  j k D borderColor	  m n L stroke
+  p q r 
+paintFocus (Ljava/awt/Graphics2D;)V t $Selecione a cor de contorno (R G B):
+ v w x y z javax/swing/JOptionPane showInputDialog :(Ljava/awt/Component;Ljava/lang/Object;)Ljava/lang/String;
+ | } ~  Ä java/lang/Integer parseInt (Ljava/lang/String;I)I Ç java/awt/Color
+ Å Ñ  Ö (I)V
+  á à H setBorderColor Code LineNumberTable drag clicked (II)Z StackMapTable resizeClicked resize 
+paintHover paintHandle paint (Ljava/awt/Graphics2D;Z)V ñ java/awt/geom/AffineTransform changeColor (Ljavax/swing/JFrame;)V 
+SourceFile 	Line.java InnerClasses Double !                
+   g  â   6     *∑ *µ *µ ±    ä               ã   â   Q     )*Y¥ `µ *Y¥ `µ *Y¥ `µ *Y¥ `µ ±    ä        
+      (   å ç  â   ] 
+    1ª Y*¥ á*¥ á*¥ á*¥ á∑ N-áá∂  !òù ß ¨    ä   
+       $ é   
+ ¸ / @  è ç  â   O 
+    3ª #Y*¥ *¥ %dá*¥ *¥ %dá*¥ %há*¥ %há∑ (N-áá∂ )¨    ä   
+    ' * .  ê   â   5     *Y¥ `µ *Y¥ `µ ±    ä       2 
+ 3  4  ë r  â   å     \+∂ /M+*¥ 5*¥ 9*¥ `á :o*¥ <*¥ `á :o∂ =+≤ A∂ E+≤ I∂ M+ª Y*¥ 9á*¥ <á*¥ á*¥ á∑ ∂ Q+,∂ U±    ä       8  9 ) @ 0 A 7 B V E [ F  q r  â   R     .+≤ Y∂ E+≤ \∂ M+ª Y*¥ 9á*¥ <á*¥ á*¥ á∑ ∂ Q±    ä       H  I  J - L  í r  â   ê     `+∂ /M+*¥ 5*¥ 9*¥ `lá*¥ <*¥ `lá∂ =+≤ A∂ E+ª _Y∑ a∂ M+*¥ *¥ %d*¥ *¥ %d*¥ %h*¥ %h∂ d+,∂ U±    ä       N  O % Q , R 8 S Z [ _ \  ì î  â   ≠     g+∂ /N+*¥ h*¥ 9*¥ `á :o*¥ <*¥ `á :o∂ =+*¥ i∂ E+*¥ l∂ M+ª Y*¥ 9á*¥ <á*¥ á*¥ á∑ ∂ Qô *+∂ o+-∂ U±    ä   & 	   ^  _ ) f 1 g 9 h X j \ k a o f p é    ¸ a ï  ó ò  â   ?     +s∏ uM,∏ {>*ª ÅY∑ É∂ Ü±    ä       w  z  {  |  ô    ö õ       ú 	 # * ú 	package figures;
+
+import java.awt.*;
+import java.awt.geom.Line2D;
+import java.awt.geom.Rectangle2D;
+import java.awt.geom.AffineTransform;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
+public class Line extends Figure {
+	private int x2, y2;
+
+
+	public Line(int x, int y, int x2, int y2) {
+		super(x, y);
+
+		this.x2 = x2;
+		this.y2 = y2;
+	}
+
+	@Override
+	public void drag (int dx, int dy) {
+		super.x += dx;
+		super.y += dy;
+		x2 += dx;
+		y2 += dy;
+	}
+
+
+	public boolean clicked(int x, int y) {
+		Line2D line = new Line2D.Double(super.x, super.y, x2, y2);
+
+		// se a dist√¢ncia do mouse at√© a reta for menor ou igual a 5,
+		// retorna 'true'
+		return line.ptSegDist(x, y) <= 5;
+	}
+	public boolean resizeClicked(int x, int y) {
+		Rectangle2D rectangle = new Rectangle2D.Double(
+			x2 - super.handle_gap,
+			y2 - super.handle_gap,
+			2 * super.handle_gap,
+			2 * super.handle_gap
+		);
+
+		return rectangle.contains(x, y);
+	}
+
+        public void resize(int dx, int dy) {
+                x2 += dx;
+                y2 += dy;
+        }
+
+
+	public void paintHover(Graphics2D g2d) {
+		AffineTransform saveAT = g2d.getTransform();
+		g2d.rotate(
+			super.angle,
+			(x + x2)/2.0,
+			(y + y2)/2.0
+		);
+
+
+		g2d.setColor(super.HOVER_COLOR);
+		g2d.setStroke(super.HOVER_STROKE);
+		g2d.draw(new Line2D.Double(x, y, x2, y2));
+
+
+		g2d.setTransform(saveAT);
+	}
+	public void paintFocus(Graphics2D g2d) {
+		g2d.setColor(super.FOCUS_COLOR);
+		g2d.setStroke(super.FOCUS_STROKE);
+		g2d.draw(new Line2D.Double(x, y, x2, y2));
+		//g2d.drawRect(x, y, x2 - x, y2 - y); // mais complexo
+	}
+	public void paintHandle(Graphics2D g2d) {
+		AffineTransform saveAT = g2d.getTransform();
+		g2d.rotate(super.angle, (x + x2)/2, (y + y2)/2);
+
+		g2d.setColor(super.HOVER_COLOR);
+		g2d.setStroke(new BasicStroke(2.0f));
+		g2d.drawRect(
+			x2 - super.handle_gap,
+			y2 - super.handle_gap,
+			2 * super.handle_gap,
+			2 * super.handle_gap
+		);
+
+
+		g2d.setTransform(saveAT);
+	}
+	public void paint(Graphics2D g2d, boolean focused) {
+		AffineTransform saveAT = g2d.getTransform();
+		g2d.rotate(
+			angle,
+			(x + x2)/2.0,
+			(y + y2)/2.0
+		);
+
+
+		g2d.setColor(super.borderColor);
+		g2d.setStroke(super.stroke);
+		g2d.draw(new Line2D.Double(x, y, x2, y2));
+
+		if (focused) {
+			paintFocus(g2d);
+		}
+
+
+		g2d.setTransform(saveAT);
+	}
+
+
+        public void changeColor(JFrame frame) {
+                String string;
+                int hex;
+
+                string = JOptionPane.showInputDialog(
+                        frame, "Selecione a cor de contorno (R G B):"
+                );
+                hex = Integer.parseInt(string, 16);
+                this.setBorderColor(new Color(hex));
+        }
+}
+ ˛∫æ   G ï
+      figures/Figure <init> (II)V	  	 
+   figures/Rect width I	     height   java/awt/geom/Rectangle2D$Double	     x	     y
+     (DDDD)V
+       java/awt/geom/Rectangle2D contains (DD)Z	  " #  
+handle_gap
+ % & ' ( ) java/awt/Graphics2D getTransform !()Ljava/awt/geom/AffineTransform;	  + , - angle D@       
+ % 1 2 3 rotate (DDD)V	  5 6 7 HOVER_COLOR Ljava/awt/Color;
+ % 9 : ; setColor (Ljava/awt/Color;)V	  = > ? HOVER_STROKE Ljava/awt/BasicStroke;
+ % A B C 	setStroke (Ljava/awt/Stroke;)V
+ % E F G drawRect (IIII)V
+ % I J K setTransform "(Ljava/awt/geom/AffineTransform;)V	  M N 7 FOCUS_COLOR	  P Q ? FOCUS_STROKE S java/awt/BasicStroke
+ R U  V (F)V	  X Y 7 	fillColor
+ % [ \ G fillRect	  ^ _ 7 borderColor	  a b ? stroke
+  d e f 
+paintFocus (Ljava/awt/Graphics2D;)V h $Selecione a cor de contorno (R G B):
+ j k l m n javax/swing/JOptionPane showInputDialog :(Ljava/awt/Component;Ljava/lang/Object;)Ljava/lang/String;
+ p q r s t java/lang/Integer parseInt (Ljava/lang/String;I)I v java/awt/Color
+ u x  y (I)V
+  { | ; setBorderColor ~ !Selecione a cor de fundo (R G B):
+  Ä Å ; setFillColor Code LineNumberTable clicked (II)Z resizeClicked resize StackMapTable 
+paintHover paintHandle paint (Ljava/awt/Graphics2D;Z)V é java/awt/geom/AffineTransform changeColor (Ljavax/swing/JFrame;)V 
+SourceFile 	Rect.java InnerClasses Double !                	   G  Ç   6     *∑ *µ *µ ±    É               Ñ Ö  Ç   A 
+    %ª Y*¥ á*¥ á*¥ á*¥ á∑ N-áá∂ ¨    É   
+        Ü Ö  Ç   Y 
+    =ª Y*¥ *¥ `*¥ !dá*¥ *¥ `*¥ !dá*¥ !há*¥ !há∑ N-áá∂ ¨    É   
+      4 '  á   Ç   i     /*Y¥ `µ *Y¥ `µ *¥ ¢ *µ *¥ ¢ *µ ±    É       + 
+ ,  .  / ! 2 ) 3 . 5 à    !  â f  Ç   É     S+∂ $M+*¥ **¥ á*¥ á .oc*¥ á*¥ á .oc∂ 0+≤ 4∂ 8+≤ <∂ @+*¥ *¥ *¥ *¥ ∂ D+,∂ H±    É       9  : + = 2 > 9 ? M B R C  e f  Ç   G     #+≤ L∂ 8+≤ O∂ @+*¥ *¥ *¥ *¥ ∂ D±    É       E  F  G " H  ä f  Ç   ö     j+∂ $M+*¥ **¥ *¥ l`á*¥ *¥ l`á∂ 0+≤ 4∂ 8+ª RY∑ T∂ @+*¥ *¥ `*¥ !d*¥ *¥ `*¥ !d*¥ !h*¥ !h∂ D+,∂ H±    É       J  K % N , O 8 Q d Y i Z  ã å  Ç   ¬     t+∂ $N+*¥ **¥ *¥ l`á*¥ *¥ l`á∂ 0+*¥ W∂ 8+*¥ *¥ *¥ *¥ ∂ Z+*¥ ]∂ 8+*¥ `∂ @+*¥ *¥ *¥ *¥ ∂ Dô *+∂ c+-∂ H±    É   .    \  ] % ` - a A c I d Q e e g i h n l s m à    ¸ n ç  è ê  Ç   e     5+g∏ iM,∏ o>*ª uY∑ w∂ z+}∏ iM,∏ o>*ª uY∑ w∂ ±    É       t  w  x  { ! ~ (  4 Ä  ë    í ì   
+    î 	package figures;
+
+import java.awt.*;
+import java.awt.geom.Rectangle2D;
+import java.awt.geom.AffineTransform;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
+public class Rect extends Figure {
+	private int width;
+	private int height;
+
+
+	public Rect(int x, int y, int width, int height) {
+		super(x, y);
+
+		this.width = width;
+		this.height = height;
+	}
+
+
+	public boolean clicked(int x, int y) {
+		Rectangle2D rectangle = new Rectangle2D.Double(
+			this.x, this.y,
+			width, height
+		);
+
+		return rectangle.contains(x,y);
+	}
+	public boolean resizeClicked(int x, int y) {
+		Rectangle2D rectangle = new Rectangle2D.Double(
+			this.x + width - super.handle_gap,
+			this.y + height - super.handle_gap,
+			2 * super.handle_gap,
+			2 * super.handle_gap
+		);
+
+		return rectangle.contains(x, y);
+	}
+
+	public void resize(int dx, int dy) {
+		width += dx;
+		height += dy;
+
+		if (width < 5) {
+			width = 5;
+		}
+
+		if (height < 5) {
+			height = 5;
+		}
+	}
+
+
+	public void paintHover(Graphics2D g2d) {
+		AffineTransform saveAT = g2d.getTransform();
+		g2d.rotate(super.angle, x + (width/2.0), y + (height/2.0));
+
+
+		g2d.setColor(super.HOVER_COLOR);
+		g2d.setStroke(super.HOVER_STROKE);
+		g2d.drawRect(x, y, width, height);
+
+
+		g2d.setTransform(saveAT);
+	}
+	public void paintFocus(Graphics2D g2d) {
+		g2d.setColor(super.FOCUS_COLOR);
+		g2d.setStroke(super.FOCUS_STROKE);
+		g2d.drawRect(x, y, width, height);
+	}
+	public void paintHandle(Graphics2D g2d) {
+		AffineTransform saveAT = g2d.getTransform();
+		g2d.rotate(super.angle, x + (width/2), y + (height/2));
+
+
+		g2d.setColor(super.HOVER_COLOR);
+		g2d.setStroke(new BasicStroke(2.0f));
+		//g2d.setStroke(super.HOVER_STROKE);
+		g2d.drawRect(
+			x + width - super.handle_gap,
+			y + height - super.handle_gap,
+			2 * super.handle_gap,
+			2 * super.handle_gap
+		);
+
+
+		g2d.setTransform(saveAT);
+	}
+	public void paint(Graphics2D g2d, boolean focused) {
+		AffineTransform saveAT = g2d.getTransform();
+		g2d.rotate(super.angle, x + (width/2), y + (height/2));
+
+
+		g2d.setColor(super.fillColor);
+		g2d.fillRect(x, y, width, height);
+
+		g2d.setColor(super.borderColor);
+		g2d.setStroke(super.stroke);
+		g2d.drawRect(x, y, width, height);
+
+		if (focused) {
+			paintFocus(g2d);
+		}
+
+
+		g2d.setTransform(saveAT);
+	}
+
+
+	public void changeColor(JFrame frame) {
+		String string;
+		int hex;
+
+		string = JOptionPane.showInputDialog(
+			frame, "Selecione a cor de contorno (R G B):"
+		);
+		hex = Integer.parseInt(string, 16);
+		this.setBorderColor(new Color(hex));
+
+
+		string = JOptionPane.showInputDialog(
+			frame, "Selecione a cor de fundo (R G B):"
+		);
+		hex = Integer.parseInt(string, 16);
+		this.setFillColor(new Color(hex));
+	}
+}
+ ˛∫æ   G º
+      figures/Figure <init> (II)V	  	 
+   figures/Triangle vertex I  java/awt/Polygon
+     ()V	     triangle Ljava/awt/Polygon;	     x2	     y2	     x3	    !  y3	  # $  x	  & '  y
+  ) *  addPoint	  , - . xpoints [I	  0 1 . ypoints
+  3 4  
+invalidate
+  6 7 8 contains (II)Z :  java/awt/geom/Rectangle2D$Double	  < =  
+handle_gap
+ 9 ?  @ (DDDD)V
+ B C D 7 E java/awt/geom/Rectangle2D (DD)Z
+ G H I J K java/awt/Graphics2D getTransform !()Ljava/awt/geom/AffineTransform;	  M N O angle D@      
+ G S T U rotate (DDD)V	  W X Y HOVER_COLOR Ljava/awt/Color;
+ G [ \ ] setColor (Ljava/awt/Color;)V	  _ ` a HOVER_STROKE Ljava/awt/BasicStroke;
+ G c d e 	setStroke (Ljava/awt/Stroke;)V
+ G g h i drawPolygon (Ljava/awt/Polygon;)V
+ G k l m setTransform "(Ljava/awt/geom/AffineTransform;)V	  o p Y FOCUS_COLOR	  r s a FOCUS_STROKE u java/awt/BasicStroke
+ t w  x (F)V
+ G z { | drawRect (IIII)V	  ~  Y 	fillColor
+ G Å Ç i fillPolygon	  Ñ Ö Y borderColor	  á à a stroke
+  ä ã å 
+paintFocus (Ljava/awt/Graphics2D;)V é $Selecione a cor de contorno (R G B):
+ ê ë í ì î javax/swing/JOptionPane showInputDialog :(Ljava/awt/Component;Ljava/lang/Object;)Ljava/lang/String;
+ ñ ó ò ô ö java/lang/Integer parseInt (Ljava/lang/String;I)I ú java/awt/Color
+ õ û  ü (I)V
+  ° ¢ ] setBorderColor § !Selecione a cor de fundo (R G B):
+  ¶ ß ] setFillColor 	(IIIIII)V Code LineNumberTable drag clicked resizeClicked StackMapTable resize 
+paintHover paintHandle paint (Ljava/awt/Graphics2D;Z)V µ java/awt/geom/AffineTransform changeColor (Ljavax/swing/JFrame;)V 
+SourceFile Triangle.java InnerClasses Double !                      !              
+   ®  ©   í     R*∑ *µ *ª Y∑ µ *µ *µ *µ *µ *¥ *¥ "*¥ %∂ (*¥ ∂ (*¥ ∂ (±    ™   .             !  '  -  <  F  Q   ´   ©   ﬁ     í*Y¥ "`µ "*Y¥ %`µ %*Y¥ `µ *Y¥ `µ *Y¥ `µ *Y¥ `µ *¥ ¥ +*¥ "O*¥ ¥ +*¥ O*¥ ¥ +*¥ O*¥ ¥ /*¥ %O*¥ ¥ /*¥ O*¥ ¥ /*¥ O*¥ ∂ 2±    ™   :    " 
+ #  $  % ( & 2 ' < ) I * V + c - p . } / ä 1 ë 2  ¨ 8  ©   "     
+*¥ ∂ 5¨    ™       6  ≠ 8  ©  ! 
+    ø*µ ª 9Y*¥ "*¥ ;dá*¥ %*¥ ;dá*¥ ;há*¥ ;há∑ >Nª 9Y*¥ *¥ ;dá*¥ *¥ ;dá*¥ ;há*¥ ;há∑ >:ª 9Y*¥ *¥ ;dá*¥ *¥ ;dá*¥ ;há*¥ ;há∑ >:-áá∂ Aô 
+*µ ¨áá∂ Aô 
+*µ ¨áá∂ Aô 
+*µ ¨¨    ™   :    9  ; / A Z G Ö N ê O ï P ó R £ S ® T ™ V ∂ W ª X Ω [ Æ    ˛ ó B B B  Ø   ©       ∏*¥ ™      ^            3   J*Y¥ "`µ "*Y¥ %`µ %ß .*Y¥ `µ *Y¥ `µ ß *Y¥ `µ *Y¥ `µ *¥ ¥ +*¥ "O*¥ ¥ +*¥ O*¥ ¥ +*¥ O*¥ ¥ /*¥ %O*¥ ¥ /*¥ O*¥ ¥ /*¥ O*¥ ∂ 2±    ™   F    a   k * l 4 m 7 o A p K q N s X t b x o y | z â | ñ } £ ~ ∞ Ä ∑ Å Æ       ∞ å  ©    	    O+∂ FM+*¥ L*¥ "*¥ `*¥ `á Po*¥ %*¥ `*¥ `á Po∂ R+≤ V∂ Z+≤ ^∂ b+*¥ ∂ f+,∂ j±    ™       Ö  Ü 3 â : ä A ã I é N è  ã å  ©   ;     +≤ n∂ Z+≤ q∂ b+*¥ ∂ f±    ™       ë  í  ì  î  ± å  ©   Í 	    ≤+∂ FM+*¥ L*¥ "*¥ `*¥ `á Po*¥ %*¥ `*¥ `á Po∂ R+≤ V∂ Z+ª tY∑ v∂ b+*¥ "*¥ ;d*¥ %*¥ ;d*¥ ;h*¥ ;h∂ y+*¥ *¥ ;d*¥ *¥ ;d*¥ ;h*¥ ;h∂ y+*¥ *¥ ;d*¥ *¥ ;d*¥ ;h*¥ ;h∂ y+,∂ j±    ™   & 	   ñ  ó 3 ö : õ F ú h ¢ ä ® ¨ ∞ ± ±  ≤ ≥  ©   ∏ 	    j+∂ FN+*¥ L*¥ "*¥ `*¥ `á Po*¥ %*¥ `*¥ `á Po∂ R+*¥ }∂ Z+*¥ ∂ Ä+*¥ É∂ Z+*¥ Ü∂ b+*¥ ∂ fô *+∂ â+-∂ j±    ™   .    ≥  ¥ 3 ∑ ; ∏ C ∫ K ª S º [ æ _ ø d √ i ƒ Æ    ¸ d ¥  ∂ ∑  ©   e     5+ç∏ èM,∏ ï>*ª õY∑ ù∂ †+£∏ èM,∏ ï>*ª õY∑ ù∂ •±    ™       À  Œ  œ  “ ! ’ ( ÷ 4 ◊  ∏    π ∫   
+  9 B ª 	package figures;
+
+import java.awt.*;
+import java.awt.geom.Rectangle2D;
+import java.awt.geom.AffineTransform;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
+public class Triangle extends Figure {
+	private int x2, y2;
+	private int x3, y3;
+
+	private int vertex = 0;
+	private Polygon triangle = new Polygon();
+
+
+	public Triangle(int x, int y, int x2, int y2, int x3, int y3) {
+		super(x,y);
+
+		this.x2 = x2;
+		this.y2 = y2;
+		this.x3 = x3;
+		this.y3 = y3;
+
+		triangle.addPoint(this.x, this.y);
+		triangle.addPoint(x2, y2);
+		triangle.addPoint(x3, y3);
+	}
+
+
+	@Override
+	public void drag(int dx, int dy) {
+		x += dx;
+		y += dy;
+		x2 += dx;
+		y2 += dy;
+		x3 += dx;
+		y3 += dy;
+
+		triangle.xpoints[0] = x;
+		triangle.xpoints[1] = x2;
+		triangle.xpoints[2] = x3;
+
+		triangle.ypoints[0] = y;
+		triangle.ypoints[1] = y2;
+		triangle.ypoints[2] = y3;
+
+		triangle.invalidate();
+	}
+
+
+	public boolean clicked(int x, int y) {
+		return triangle.contains(x, y);
+	}
+	public boolean resizeClicked(int x, int y) {
+		vertex = 0;
+
+                Rectangle2D rectangle1 = new Rectangle2D.Double(
+                        this.x - super.handle_gap,
+                        this.y - super.handle_gap,
+                        2 * super.handle_gap,
+                        2 * super.handle_gap
+		);
+                Rectangle2D rectangle2 = new Rectangle2D.Double(
+                        x2 - super.handle_gap,
+                        y2 - super.handle_gap,
+                        2 * super.handle_gap,
+                        2 * super.handle_gap
+		);
+                Rectangle2D rectangle3 = new Rectangle2D.Double(
+                        x3 - super.handle_gap,
+                        y3 - super.handle_gap,
+                        2 * super.handle_gap,
+                        2 * super.handle_gap
+		);
+	
+		if (rectangle1.contains(x,y)) {
+			vertex = 1;
+			return true;
+		}
+		else if (rectangle2.contains(x,y)) {
+			vertex = 2;
+			return true;
+		}
+		else if (rectangle3.contains(x,y)) {
+			vertex = 3;
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+
+	public void resize(int dx, int dy) {
+		switch (vertex) {
+		/*case 0: // ponteiro fora dos v√©rtices
+			y -= dy;
+			x2 -= dx;
+			y2 += dy;
+			x3 += dx;
+			y3 += dy;
+			break;
+		*/
+		case 1:
+			x += dx;
+			y += dy;
+			break;
+		case 2:
+			x2 += dx;
+			y2 += dy;
+			break;
+		case 3:
+			x3 += dx;
+			y3 += dy;
+			break;
+		}
+
+		triangle.xpoints[0] = x;
+		triangle.xpoints[1] = x2;
+		triangle.xpoints[2] = x3;
+
+		triangle.ypoints[0] = y;
+		triangle.ypoints[1] = y2;
+		triangle.ypoints[2] = y3;
+
+		triangle.invalidate();
+	}
+
+
+	public void paintHover(Graphics2D g2d) {
+		AffineTransform saveAT = g2d.getTransform();
+		g2d.rotate(super.angle, (x + x2+ x3)/3.0, (y + y2 + y3)/3.0);
+
+
+		g2d.setColor(super.HOVER_COLOR);
+		g2d.setStroke(super.HOVER_STROKE);
+		g2d.drawPolygon(triangle);
+
+
+		g2d.setTransform(saveAT);
+	}
+	public void paintFocus(Graphics2D g2d) {
+		g2d.setColor(super.FOCUS_COLOR);
+		g2d.setStroke(super.FOCUS_STROKE);
+		g2d.drawPolygon(triangle);
+	}
+	public void paintHandle(Graphics2D g2d) {
+		AffineTransform saveAT = g2d.getTransform();
+		g2d.rotate(super.angle, (x + x2 + x3)/3.0, (y + y2 + y3)/3.0);
+
+
+		g2d.setColor(super.HOVER_COLOR);
+		g2d.setStroke(new BasicStroke(2.0f));
+                g2d.drawRect(
+                        x - super.handle_gap,
+                        y - super.handle_gap,
+                        2 * super.handle_gap,
+                        2 * super.handle_gap
+                );
+                g2d.drawRect(
+                        x2 - super.handle_gap,
+                        y2 - super.handle_gap,
+                        2 * super.handle_gap,
+                        2 * super.handle_gap
+                );
+                g2d.drawRect(
+                        x3 - super.handle_gap,
+                        y3 - super.handle_gap,
+                        2 * super.handle_gap,
+                        2 * super.handle_gap
+                );
+
+
+		g2d.setTransform(saveAT);
+	}
+	public void paint(Graphics2D g2d, boolean focused) {
+		AffineTransform saveAT = g2d.getTransform();
+		g2d.rotate(super.angle, (x + x2 + x3)/3.0, (y + y2 + y3)/3.0);
+
+
+		g2d.setColor(super.fillColor);
+		g2d.fillPolygon(triangle);
+
+		g2d.setColor(super.borderColor);
+		g2d.setStroke(super.stroke);
+		g2d.drawPolygon(triangle);
+
+		if (focused) {
+			paintFocus(g2d);
+		}
+
+
+		g2d.setTransform(saveAT);
+	}
+
+
+        public void changeColor(JFrame frame) {
+                String string;
+                int hex;
+
+                string = JOptionPane.showInputDialog(
+                        frame, "Selecione a cor de contorno (R G B):"
+                );
+                hex = Integer.parseInt(string, 16);
+                this.setBorderColor(new Color(hex));
+
+
+                string = JOptionPane.showInputDialog(
+                        frame, "Selecione a cor de fundo (R G B):"
+                );
+                hex = Integer.parseInt(string, 16);
+                this.setFillColor(new Color(hex));
+        }
+}
+ ˛∫æ   G   ivisible/IVisible  java/lang/Object clicked (II)Z paint (Ljava/awt/Graphics2D;Z)V 
+SourceFile IVisible.java                 	    
+package ivisible;
+
+import java.awt.*;
+//import java.awt.Graphics;
+//import java.awt.Graphics2D;
+
+public interface IVisible {
+	public boolean clicked(int x, int y);
+	public void paint(Graphics2D g2d, boolean focused);
+	// o par√¢metro booleano em paint() serve para determinar
+	// se o objeto deve ser desenhado com ou sem foco
+}
+ ˛∫æ   G ^
+      java/lang/Object <init> ()V	  	 
+   	ui/Button x I	     y	     width	     height	     index  figures/Line
+     (IIII)V	     ! figure Lfigures/Figure; # figures/Triangle
+ " %  & 	(IIIIII)V ( figures/Ellipse
+ '  + figures/Rect
+ *  . java/awt/BasicStroke
+ - 0  1 (F)V
+ 3 4 5 6 7 java/awt/Graphics2D 	setStroke (Ljava/awt/Stroke;)V	 9 : ; < = java/awt/Color 
+LIGHT_GRAY Ljava/awt/Color;
+ 3 ? @ A setColor (Ljava/awt/Color;)V	 9 C D = WHITE
+ 3 F G  fillRect	 9 I J = BLACK
+ 3 L M  drawRect
+ O P Q R S figures/Figure paint (Ljava/awt/Graphics2D;Z)V U ivisible/IVisible (I)V Code LineNumberTable StackMapTable clicked (II)Z 
+SourceFile Button.java !    T          !                          V  W  ä 
+   *∑ *
+µ *µ *(µ **¥ µ *µ *Y¥ *¥ `h`µ ™     ◊          #   S   õ   π   ◊*ª Y*¥ `*¥ `*¥ *¥ `d*¥ *¥ `d∑ µ ß á*ª "Y*¥ *¥ `l`*¥ `*¥ `*¥ *¥ `d*¥ *¥ `d*¥ *¥ `d∑ $µ ß ?*ª 'Y*¥ `*¥ `∑ )µ ß !*ª *Y*¥ `*¥ `∑ ,µ ß **¥ µ ±    X   J       
+        #  4  X  Ö  à  Õ $ – ' Î ( Ó +	 , 3 4 Y    ˇ X    /˚ G  Z [  W   S     0*¥ ° )*¥ *¥ `£ *¥ ° *¥ *¥ `£ ß ¨    X       7 Y    .@  R S  W   ú     Z+ª -Y∑ /∂ 2ô +≤ 8∂ >ß 
++≤ B∂ >+*¥ *¥ *¥ *¥ ∂ E+≤ H∂ >+*¥ *¥ *¥ *¥ ∂ K*¥ +∂ N±    X   & 	   =  ?  @  C ! E 5 H < I P K Y L Y      \    ]package ui;
+
+//import figures.Figure;
+import figures.*;
+import ivisible.IVisible;
+import java.awt.Graphics2D;
+import java.awt.*;
+
+public class Button implements IVisible {
+	public int index;
+	private Figure figure;
+	
+	private int x = 10;	
+	private int y = 20;
+	private int width = 40;
+	private int height = width;
+
+	public Button(int index) {
+		this.index = index;
+		y += index * (height+1);
+
+		switch (index) {
+		case 0: 
+			figure = new Line(
+					  x + 5, y + 5,
+					  x + width - 5, y + height - 5
+					 );
+			break;
+
+		case 1:
+			figure = new Triangle(
+					      (x + width)/2 + 5, y + 5,
+					      x + 5, y + height - 5,
+					      x + width - 5, y + height - 5
+					     );
+			break;
+
+		case 2:
+			figure = new Ellipse(x + 5, y + 5, 30, 30);
+			break;
+
+		case 3:
+			figure = new Rect(x + 5, y + 5, 30, 30);
+			break;
+
+		case 4:
+			break;
+		}
+
+
+		figure = figure;
+	}
+
+	public boolean clicked(int x, int y) {
+		return x >= this.x && x <= this.x + width
+			&& y >= this.y && y <= this.y + height;
+	}
+
+
+	public void paint(Graphics2D g2d, boolean focused) {
+		g2d.setStroke(new BasicStroke(2.0f));
+
+		if (focused)  {
+			g2d.setColor(Color.LIGHT_GRAY);
+		}
+		else {
+			g2d.setColor(Color.WHITE);
+		}
+		g2d.fillRect(x, y, width, height);
+
+
+		g2d.setColor(Color.BLACK);
+		g2d.drawRect(x, y, width, height);
+
+		figure.paint(g2d, false);
+	}
+}
+import ivisible.IVisible
+
+public class Button implements IVisible {
+	public int index;
+	private Figure fig;
+	
+	public Button(int index, Figure fig) {
+	}
+	public boolean cliked(int x, int y) {
+		return true;
+	}
+	public void paint(Graphics g, boolean focused) {
+		if (focused) {
+		}
+		else {
+		}
+		g2d.drawRect(...);
+		this.fig.paint(g,false);
+		// √© false porque a figura √© desenhada sem foco!
+	}
+}
