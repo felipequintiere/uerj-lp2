@@ -5,7 +5,12 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Random;
 
+import java.awt.geom.AffineTransform;
+
 import figures.*;
+import ui.Button;
+
+import java.io.*;
 
 public class Eve {
 	public static void main(String[] args) {
@@ -15,6 +20,8 @@ public class Eve {
 
 class EveFrame extends JFrame {
 	ArrayList<Figure> figs = new ArrayList<Figure>();
+	ArrayList<Button> buttons = new ArrayList<Button>();
+	Button focusButton = null;
 
 	// focus/hover sobre objeto
 	Figure focus = null;
@@ -31,6 +38,13 @@ class EveFrame extends JFrame {
 		this.setTitle("Eve - Editor Vetorial");
 		this.setSize(700, 700);
 		this.setVisible(true);
+
+		// buttons.add(new Button(0)); 
+		buttons.add(new Button(0)); // line
+		buttons.add(new Button(1)); // triangle
+		buttons.add(new Button(2)); // ellipse
+		buttons.add(new Button(3)); // rect
+		//buttons.add(new Button(4)); // text
 
 		// fechar a janela
 		this.addWindowListener(
@@ -71,15 +85,15 @@ class EveFrame extends JFrame {
 					hover = null;
 
 					for (Figure fig : figs) {
-						//if (fig.clicked(e.getX(), e.getY()) == true) {
-						if (fig.contains(e.getX(), e.getY()) == true) {
+						if (fig.clicked(e.getX(), e.getY()) == true) {
 							hover = fig;
 						}
 					}
 
-					if (oldHover != hover) {
-						repaint();
-					}
+					// funcionalidade de hover
+					// if (oldHover != hover) {
+					// 	repaint();
+					// }
 				}
 			}
 		);
@@ -87,14 +101,20 @@ class EveFrame extends JFrame {
 			new MouseAdapter() {
 				public void mousePressed(MouseEvent e) {
 					if (e.getButton() == MouseEvent.BUTTON1) {
+						for (Button button : buttons) {
+							if (button.clicked(e.getX(), e.getY())) {
+								focusButton = button;
+							}
+						}
+
 						if (focus != null &&
-								focus.resizeContains(e.getX(), e.getY())) {
+								focus.resizeClicked(e.getX(), e.getY())) {
 							resizing = true;
 						}
 						else if (hover == null) {
 							focus = null;
 						}
-						else if (hover.clicked(e.getX(), e.getY())) {
+						else if  (hover.clicked(e.getX(), e.getY())) {
 							focus = hover;
 						}
 					}
@@ -166,6 +186,7 @@ class EveFrame extends JFrame {
 								mouseX+100, mouseY+60)
 							);
 							break;
+
 						case KeyEvent.VK_W:
 							figs.add(new Triangle(
 								mouseX, mouseY,
@@ -173,18 +194,21 @@ class EveFrame extends JFrame {
 								mouseX + 50, mouseY + 50)
 							);
 							break;
+					
 						case KeyEvent.VK_E:
 							figs.add(new Ellipse(
 								mouseX, mouseY,
 								100, 60)
 							);
 							break;
+
 						case KeyEvent.VK_R:
 							figs.add(new Rect(
 								mouseX, mouseY,
 								100, 60)
 							);
 							break;
+							/*
 						case KeyEvent.VK_T:
 							figs.add(new Text(
 								mouseX,
@@ -194,14 +218,17 @@ class EveFrame extends JFrame {
 								"SansSerif"
 							));
 							break;
+							*/
 
 						// questao 1 [ item b ]
+						/*
 						case KeyEvent.VK_1:
 							figs.add(new Carro(
 								mouseX, mouseY,
 								100, 60)
 							);
 							break;
+						*/
 
 						// questao 2
 						case KeyEvent.VK_2:
@@ -310,33 +337,24 @@ class EveFrame extends JFrame {
 	public void paint(Graphics g) {
 		super.paint(g);
 		Graphics2D g2d = (Graphics2D) g;
-
-		int w = getWidth();
-		int h = getHeight();
-
-		Color focusColor = new Color(255, 0, 0);
-		Color hoverColor = new Color(0, 0, 255);
-
-		BasicStroke focusStroke = new BasicStroke(
-			3.0f,
-			BasicStroke.CAP_BUTT,
-			BasicStroke.JOIN_MITER,
-			10.0f,
-			new float[] {5.0f, 5.0f},
-			0.0f
-		);
-		BasicStroke hoverStroke = new BasicStroke(2.0f);
-
+	
+		// desenha todas as figuras normalmente
 		for (Figure fig : figs) {
-			fig.paint(g2d);
+			fig.paint(g2d, fig == focus);
 		}
 
+		// desenha o handle por cima de todas as figuras
 		if (focus != null) {
-			focus.paintFocus(g2d, focusColor, focusStroke);
-			focus.paintHandle(g2d, new Color(0, 0, 255), new BasicStroke(2.0f));
+			focus.paintHandle(g2d);
 		}
-		if (hover != null && hover != focus) {
-			hover.paintHover(g2d, hoverColor, hoverStroke);
+		// funcionalidade de hover
+		//if (hover != null && hover != focus) {
+		// if (hover != null) {
+		// 	hover.paintHover(g2d);
+		// }
+		
+		for (Button button : buttons) {
+			button.paint(g2d, button == focusButton);
 		}
 	}
 }

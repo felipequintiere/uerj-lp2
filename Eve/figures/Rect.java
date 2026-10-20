@@ -11,39 +11,34 @@ public class Rect extends Figure {
 	private int width;
 	private int height;
 
+
 	public Rect(int x, int y, int width, int height) {
-		super(x,y);
+		super(x, y);
 
 		this.width = width;
 		this.height = height;
 	}
 
-	public boolean contains(int x, int y) {
-		Rectangle2D rectangle = new Rectangle2D.Double(
-			this.x,
-			this.y,
-			width,
-			height
-		);
 
-		return rectangle.contains(x,y);
-	}
 	public boolean clicked(int x, int y) {
 		Rectangle2D rectangle = new Rectangle2D.Double(
-			this.x,
-			this.y,
-			width,
-			height
+			this.x, this.y,
+			width, height
 		);
 
 		return rectangle.contains(x,y);
 	}
+	public boolean resizeClicked(int x, int y) {
+		Rectangle2D rectangle = new Rectangle2D.Double(
+			this.x + width - super.handle_gap,
+			this.y + height - super.handle_gap,
+			2 * super.handle_gap,
+			2 * super.handle_gap
+		);
 
-	public void drag(int dx, int dy) {
-		super.x += dx;
-		super.y += dy;
+		return rectangle.contains(x, y);
 	}
-	
+
 	public void resize(int dx, int dy) {
 		width += dx;
 		height += dy;
@@ -57,76 +52,62 @@ public class Rect extends Figure {
 		}
 	}
 
-	public void paint(Graphics g) {
-		Graphics2D g2d = (Graphics2D) g;
 
+	public void paintHover(Graphics2D g2d) {
+		AffineTransform saveAT = g2d.getTransform();
+		g2d.rotate(super.angle, x + (width/2.0), y + (height/2.0));
+
+
+		g2d.setColor(super.HOVER_COLOR);
+		g2d.setStroke(super.HOVER_STROKE);
+		g2d.drawRect(x, y, width, height);
+
+
+		g2d.setTransform(saveAT);
+	}
+	public void paintFocus(Graphics2D g2d) {
+		g2d.setColor(super.FOCUS_COLOR);
+		g2d.setStroke(super.FOCUS_STROKE);
+		g2d.drawRect(x, y, width, height);
+	}
+	public void paintHandle(Graphics2D g2d) {
 		AffineTransform saveAT = g2d.getTransform();
 		g2d.rotate(super.angle, x + (width/2), y + (height/2));
 
 
-		g2d.setColor(fillColor);
+		g2d.setColor(super.HOVER_COLOR);
+		g2d.setStroke(new BasicStroke(2.0f));
+		//g2d.setStroke(super.HOVER_STROKE);
+		g2d.drawRect(
+			x + width - super.handle_gap,
+			y + height - super.handle_gap,
+			2 * super.handle_gap,
+			2 * super.handle_gap
+		);
+
+
+		g2d.setTransform(saveAT);
+	}
+	public void paint(Graphics2D g2d, boolean focused) {
+		AffineTransform saveAT = g2d.getTransform();
+		g2d.rotate(super.angle, x + (width/2), y + (height/2));
+
+
+		g2d.setColor(super.fillColor);
 		g2d.fillRect(x, y, width, height);
 
-		g2d.setColor(borderColor);
-		g2d.setStroke(this.stroke); // stroke da classe Figure
+		g2d.setColor(super.borderColor);
+		g2d.setStroke(super.stroke);
 		g2d.drawRect(x, y, width, height);
 
-
-		g2d.setTransform(saveAT);
-	}
-
-	public void paintFocus(Graphics2D g2d, Color color, BasicStroke stroke) {
-		AffineTransform saveAT = g2d.getTransform();
-		g2d.rotate(super.angle, x + (width/2), y + (height/2));
-
-
-		g2d.setColor(color);
-		g2d.setStroke(stroke);
-		g2d.drawRect(x, y, width, height);
-
-
-		g2d.setTransform(saveAT);
-	}
-	public void paintHover(Graphics2D g2d, Color color, BasicStroke stroke) {
-		AffineTransform saveAT = g2d.getTransform();
-		g2d.rotate(super.angle, x + (width/2), y + (height/2));
-
-
-		g2d.setColor(color);
-		g2d.setStroke(stroke);
-		g2d.drawRect(x, y, width, height);
+		if (focused) {
+			paintFocus(g2d);
+		}
 
 
 		g2d.setTransform(saveAT);
 	}
 
-	public void paintHandle(Graphics2D g2d, Color color, BasicStroke stroke) {
-		AffineTransform saveAT = g2d.getTransform();
-		g2d.rotate(super.angle, x + (width/2), y + (height/2));
-
-		
-		g2d.setColor(color);
-		g2d.setStroke(stroke);
-		g2d.drawRect(
-			x + width - handle_gap,
-			y + height - handle_gap,
-			2 * handle_gap,
-			2 * handle_gap
-		);
-
-		g2d.setTransform(saveAT);
-	}
-
-	public boolean resizeContains(int x, int y) {
-		Rectangle2D rectangle = new Rectangle2D.Double(
-			this.x + width - handle_gap,
-			this.y + height - handle_gap,
-			2 * handle_gap,
-			2 * handle_gap
-		);
-
-		return rectangle.contains(x,y);
-	}
 
 	public void changeColor(JFrame frame) {
 		String string;

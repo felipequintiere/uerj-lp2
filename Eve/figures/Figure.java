@@ -7,46 +7,61 @@ import java.awt.geom.AffineTransform;
 
 import javax.swing.JFrame;
 
-public abstract class Figure implements IVisible {
+import java.io.*;
+
+public abstract class Figure implements IVisible, Serializable {
 	protected int x;
 	protected int y;
-
 	protected double angle = 0;
 
-	protected Color borderColor;
-	protected Color fillColor;
+	protected Color fillColor = Color.WHITE;
+	protected Color borderColor = Color.BLACK;
+	protected transient BasicStroke stroke = new BasicStroke(2.0f);
 
 	protected int handle_gap = 10;
-	protected BasicStroke stroke = new BasicStroke(2.0f);
+
+
+	protected static final Color FOCUS_COLOR = Color.RED;
+	protected static final BasicStroke FOCUS_STROKE =
+		new BasicStroke(2.0f);
+	protected static final Color HOVER_COLOR = Color.BLUE;
+	protected static final BasicStroke HOVER_STROKE =
+		new BasicStroke(
+			3.0f,
+			BasicStroke.CAP_BUTT,
+			BasicStroke.JOIN_MITER,
+			10.0f,
+			new float[] {5.0f, 5.0f},
+			0.0f
+		);
+
 
 	public Figure(int x, int y) {
 		this.x = x;
 		this.y = y;
-
-		this.borderColor = Color.BLACK;
-		this.fillColor = Color.WHITE;
 	}
 
-	public abstract boolean contains(int x, int y);
-	public abstract boolean clicked(int x, int y);
 
-	public abstract void drag(int dx, int dy);
+	public void drag(int dx, int dy) {
+		this.x += dx;
+		this.y += dy;
+		// @Override em Line.java, Triangle.java
+	}
+
+	public void rotate(double delta) {
+		this.angle += delta;
+	}
+
+
+	public abstract boolean clicked(int x, int y);
+	public abstract boolean resizeClicked(int x, int y);
 
 	public abstract void resize(int dx, int dy);
 
-	public void rotate(double delta) {
-		angle += delta;
-	}
-
-	public abstract void paint(Graphics g);
-
-	public abstract void paintFocus(Graphics2D g2d, Color color, BasicStroke stroke);
-
-	public abstract void paintHover(Graphics2D g2d, Color color, BasicStroke stroke);
-
-	public abstract void paintHandle(Graphics2D g2d, Color focusColor, BasicStroke focusStroke);
-
-	public abstract boolean resizeContains(int x, int y);
+	public abstract void paintHover(Graphics2D g2d);
+	public abstract void paintFocus(Graphics2D g2d);
+	public abstract void paintHandle(Graphics2D g2d);
+	public abstract void paint(Graphics2D g2d, boolean focused);
 
 	public abstract void changeColor(JFrame frame);
 
