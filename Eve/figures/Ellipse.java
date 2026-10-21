@@ -121,23 +121,4 @@ public class Ellipse extends Figure {
 
 		g2d.setTransform(saveAT);
 	}
-
-
-        public void changeColor(JFrame frame) {
-                String string;
-                int hex;
-
-                string = JOptionPane.showInputDialog(
-                        frame, "Selecione a cor de contorno (R G B):"
-                );
-                hex = Integer.parseInt(string, 16);
-                this.setBorderColor(new Color(hex));
-
-
-                string = JOptionPane.showInputDialog(
-                        frame, "Selecione a cor de fundo (R G B):"
-                );
-                hex = Integer.parseInt(string, 16);
-                this.setFillColor(new Color(hex));
-        }
 }

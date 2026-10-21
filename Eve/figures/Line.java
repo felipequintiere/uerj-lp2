@@ -111,7 +111,7 @@ public class Line extends Figure {
 		g2d.setTransform(saveAT);
 	}
 
-
+	@Override
         public void changeColor(JFrame frame) {
                 String string;
                 int hex;
