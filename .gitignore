@@ -1,3 +1,24 @@
-*.class
+# object files
+*.o
 
+# dependency files
+*.d
+
+# executável
 a.out
+*.out
+*.exe
+
+# vim/emacs
+*.swp
+*.swo
+*.swx
+*~
+\#*\#
+.\#*
+
+*.org
+
+
+proj.bin
+*.class
