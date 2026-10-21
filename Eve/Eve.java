@@ -61,7 +61,8 @@ class EveFrame extends JFrame {
 		buttons.add(new Button(1)); // triangle
 		buttons.add(new Button(2)); // ellipse
 		buttons.add(new Button(3)); // rect
-		//buttons.add(new Button(4)); // text
+		buttons.add(new Button(4)); // carro
+		//buttons.add(new Button(5)); // text
 
 		// fechar a janela
 		this.addWindowListener(
@@ -135,9 +136,9 @@ class EveFrame extends JFrame {
 						switch (focusButton.index) {
 						case 0: 
 							figs.add(new Line(
-									  mouseX, mouseY,
-									  mouseX+100, mouseY+60)
-								);
+								mouseX, mouseY,
+								mouseX + 100, mouseY + 60)
+							);
 							break;
 						case 1:
 							figs.add(new Triangle(
@@ -159,6 +160,10 @@ class EveFrame extends JFrame {
 							);
 							break;
 						case 4:
+							figs.add(new Carro(
+								mouseX, mouseY,
+								100, 60)
+							);
 							break;
 						}
 
@@ -286,34 +291,31 @@ class EveFrame extends JFrame {
 							*/
 
 						// questao 1 [ item b ]
-						/*
 						case KeyEvent.VK_1:
 							figs.add(new Carro(
 								mouseX, mouseY,
 								100, 60)
 							);
 							break;
-						*/
 
 						// questao 2
 						case KeyEvent.VK_2:
-							// indice do elemento em foco 
+							// índice do elemento em foco 
 							int i = figs.indexOf(focus);
 
-							// se nao tiver elemento na lista heterogenea
+							// se não tiver elemento na lista heterogênea
 							if (figs.isEmpty()) {
 								return;
 							} else {
-								// se nenhuma figura estiver selecionada, o foco `e
+								// se nenhuma figura estiver selecionada, o foco é
 								// passado para o primeiro elemento da lista
 								if (focus == null) {
 									focus = figs.get(0);
 								}
-								// passa o foco para o elemento de indice sucessor;
-								// a operacao de modulo e utilizada para evitar que
-								// ultrapasse o numero de elementos da lista
+								// passa o foco para o elemento de índice sucessor;
+								// a operação de módulo é utilizada para evitar que
+								// ultrapasse o número de elementos da lista
 								else {
-								
 									focus = figs.get((i + 1) % figs.size());
 								}
 							}
@@ -321,7 +323,6 @@ class EveFrame extends JFrame {
 							break;
 
 
-						//V20j:s/30/10/gc
 						case KeyEvent.VK_RIGHT:
 						case KeyEvent.VK_L:
 							if (focus != null) {

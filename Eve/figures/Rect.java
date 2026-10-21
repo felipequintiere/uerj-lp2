@@ -18,6 +18,16 @@ public class Rect extends Figure {
 		this.width = width;
 		this.height = height;
 	}
+	public Rect(int x, int y, int width, int height,
+		    Color fillcolor, Color borderColor) {
+		super(x, y);
+
+		this.width = width;
+		this.height = height;
+
+		super.fillColor = fillcolor;
+		super.borderColor = borderColor;
+	}
 
 
 	public boolean clicked(int x, int y) {
@@ -38,6 +48,7 @@ public class Rect extends Figure {
 
 		return rectangle.contains(x, y);
 	}
+
 
 	public void resize(int dx, int dy) {
 		width += dx;
@@ -77,7 +88,6 @@ public class Rect extends Figure {
 
 		g2d.setColor(super.HOVER_COLOR);
 		g2d.setStroke(new BasicStroke(2.0f));
-		//g2d.setStroke(super.HOVER_STROKE);
 		g2d.drawRect(
 			x + width - super.handle_gap,
 			y + height - super.handle_gap,

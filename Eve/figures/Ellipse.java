@@ -20,6 +20,16 @@ public class Ellipse extends Figure {
 		this.width = width;
 		this.height = height;
 	}
+	public Ellipse(int x, int y, int width, int height,
+		    Color fillcolor, Color borderColor) {
+		super(x, y);
+
+		this.width = width;
+		this.height = height;
+
+		super.fillColor = fillcolor;
+		super.borderColor = borderColor;
+	}
 
 
 	public boolean clicked(int x, int y) {

@@ -46,7 +46,7 @@ public abstract class Figure implements IVisible, Serializable {
 	public void drag(int dx, int dy) {
 		this.x += dx;
 		this.y += dy;
-		// @Override em Line.java, Triangle.java
+		// @Override em Line.java, Triangle.java, Carro.java
 	}
 
 	public void rotate(double delta) {

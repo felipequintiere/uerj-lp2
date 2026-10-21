@@ -44,6 +44,7 @@ public class Button implements IVisible {
 			break;
 
 		case 4:
+			figure = new Carro(x + 5, y + 5, 30, 30);
 			break;
 		}
 
