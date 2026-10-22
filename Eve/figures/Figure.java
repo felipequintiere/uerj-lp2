@@ -15,7 +15,6 @@ public abstract class Figure implements IVisible, Serializable {
 	protected int y;
 
 	protected double angle = 0;
-	protected int handle_gap = 10;
 
 	protected Color fillColor = Color.WHITE;
 	protected Color borderColor = Color.BLACK;
@@ -26,6 +25,9 @@ public abstract class Figure implements IVisible, Serializable {
 
 	protected static final Color HOVER_COLOR = Color.BLUE;
 	protected static final float HOVER_STROKE_WIDTH = 2.0f;
+
+	protected static final int HANDLE_GAP = 10;
+
 
 	public Figure(int x, int y) {
 		this.x = x;

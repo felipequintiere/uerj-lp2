@@ -37,10 +37,10 @@ public class Line extends Figure {
 	}
 	public boolean resizeClicked(int x, int y) {
 		Rectangle2D rectangle = new Rectangle2D.Double(
-			x2 - super.handle_gap,
-			y2 - super.handle_gap,
-			2 * super.handle_gap,
-			2 * super.handle_gap
+			x2 - super.HANDLE_GAP,
+			y2 - super.HANDLE_GAP,
+			2 * super.HANDLE_GAP,
+			2 * super.HANDLE_GAP
 		);
 
 		return rectangle.contains(x, y);
@@ -81,10 +81,10 @@ public class Line extends Figure {
 		g2d.setColor(super.HOVER_COLOR);
 		g2d.setStroke(new BasicStroke(super.HOVER_STROKE_WIDTH));
 		g2d.drawRect(
-			x2 - super.handle_gap,
-			y2 - super.handle_gap,
-			2 * super.handle_gap,
-			2 * super.handle_gap
+			x2 - super.HANDLE_GAP,
+			y2 - super.HANDLE_GAP,
+			2 * super.HANDLE_GAP,
+			2 * super.HANDLE_GAP
 		);
 
 

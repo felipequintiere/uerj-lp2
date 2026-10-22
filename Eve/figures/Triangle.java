@@ -57,22 +57,22 @@ public class Triangle extends Figure {
 		vertex = 0;
 
                 Rectangle2D rectangle1 = new Rectangle2D.Double(
-                        this.x - super.handle_gap,
-                        this.y - super.handle_gap,
-                        2 * super.handle_gap,
-                        2 * super.handle_gap
+                        this.x - super.HANDLE_GAP,
+                        this.y - super.HANDLE_GAP,
+                        2 * super.HANDLE_GAP,
+                        2 * super.HANDLE_GAP
 		);
                 Rectangle2D rectangle2 = new Rectangle2D.Double(
-                        x2 - super.handle_gap,
-                        y2 - super.handle_gap,
-                        2 * super.handle_gap,
-                        2 * super.handle_gap
+                        x2 - super.HANDLE_GAP,
+                        y2 - super.HANDLE_GAP,
+                        2 * super.HANDLE_GAP,
+                        2 * super.HANDLE_GAP
 		);
                 Rectangle2D rectangle3 = new Rectangle2D.Double(
-                        x3 - super.handle_gap,
-                        y3 - super.handle_gap,
-                        2 * super.handle_gap,
-                        2 * super.handle_gap
+                        x3 - super.HANDLE_GAP,
+                        y3 - super.HANDLE_GAP,
+                        2 * super.HANDLE_GAP,
+                        2 * super.HANDLE_GAP
 		);
 	
 		if (rectangle1.contains(x,y)) {
@@ -153,22 +153,22 @@ public class Triangle extends Figure {
 		g2d.setColor(super.HOVER_COLOR);
 		g2d.setStroke(new BasicStroke(super.HOVER_STROKE_WIDTH));
                 g2d.drawRect(
-                        x - super.handle_gap,
-                        y - super.handle_gap,
-                        2 * super.handle_gap,
-                        2 * super.handle_gap
+                        x - super.HANDLE_GAP,
+                        y - super.HANDLE_GAP,
+                        2 * super.HANDLE_GAP,
+                        2 * super.HANDLE_GAP
                 );
                 g2d.drawRect(
-                        x2 - super.handle_gap,
-                        y2 - super.handle_gap,
-                        2 * super.handle_gap,
-                        2 * super.handle_gap
+                        x2 - super.HANDLE_GAP,
+                        y2 - super.HANDLE_GAP,
+                        2 * super.HANDLE_GAP,
+                        2 * super.HANDLE_GAP
                 );
                 g2d.drawRect(
-                        x3 - super.handle_gap,
-                        y3 - super.handle_gap,
-                        2 * super.handle_gap,
-                        2 * super.handle_gap
+                        x3 - super.HANDLE_GAP,
+                        y3 - super.HANDLE_GAP,
+                        2 * super.HANDLE_GAP,
+                        2 * super.HANDLE_GAP
                 );
 
 

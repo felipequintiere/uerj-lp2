@@ -11,8 +11,9 @@ public class Carro extends Figure {
 	private int width;
 	private int height;
 
-	Rect chassi;
-	Ellipse roda1, roda2;
+	private Rect chassi;
+	private Ellipse roda1;
+	private Ellipse roda2;
 
 
 	private void atualizarCarro() { // função auxiliar
@@ -72,10 +73,10 @@ public class Carro extends Figure {
 	}
 	public boolean resizeClicked(int x, int y) {
 		Rectangle2D rectangle = new Rectangle2D.Double(
-			this.x + width - super.handle_gap,
-			this.y + height - super.handle_gap,
-			2 * super.handle_gap,
-			2 * super.handle_gap
+			this.x + width - super.HANDLE_GAP,
+			this.y + height - super.HANDLE_GAP,
+			2 * super.HANDLE_GAP,
+			2 * super.HANDLE_GAP
 		);
 
 		return rectangle.contains(x, y);
@@ -116,10 +117,10 @@ public class Carro extends Figure {
 		g2d.setColor(super.HOVER_COLOR);
 		g2d.setStroke(new BasicStroke(super.HOVER_STROKE_WIDTH));		
 		g2d.drawRect(
-			x + width - handle_gap,
-			y + height - handle_gap,
-			2 * handle_gap,
-			2 * handle_gap
+			x + width - HANDLE_GAP,
+			y + height - HANDLE_GAP,
+			2 * HANDLE_GAP,
+			2 * HANDLE_GAP
 		);
 
 

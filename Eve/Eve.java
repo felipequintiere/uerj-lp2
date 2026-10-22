@@ -19,20 +19,20 @@ public class Eve {
 }
 
 class EveFrame extends JFrame {
-	ArrayList<Figure> figs = new ArrayList<Figure>();
-	ArrayList<Button> buttons = new ArrayList<Button>();
-	Button focusButton = null;
+	private ArrayList<Figure> figs = new ArrayList<Figure>();
+	private ArrayList<Button> buttons = new ArrayList<Button>();
+	private Button focusButton = null;
 
 	// focus/hover sobre objeto
-	Figure focus = null;
-	Figure hover = null;
+	private Figure focus = null;
+	private Figure hover = null;
 
-	boolean resizing = false;
+	private boolean resizing = false;
 
-	int mouseX;
-	int mouseY;
+	private int mouseX;
+	private int mouseY;
 
-	int index; // index da lista heterogênea
+	private int index; // index da lista heterogênea
 
 	@SuppressWarnings("unchecked")
 	public EveFrame() {
