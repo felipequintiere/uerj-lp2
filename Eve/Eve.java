@@ -133,7 +133,7 @@ class EveFrame extends JFrame {
 			new MouseAdapter() {
 				public void mousePressed(MouseEvent e) {
 					if (e.getButton() == MouseEvent.BUTTON1 && focusButton != null) {
-						switch (focusButton.index) {
+						switch (focusButton.getIndex()) {
 						case 0: 
 							figs.add(new Line(
 								mouseX, mouseY,

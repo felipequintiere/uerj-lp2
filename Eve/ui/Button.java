@@ -7,7 +7,7 @@ import figures.*;
 import ivisible.IVisible;
 
 public class Button implements IVisible {
-	public int index;
+	private int index;
 	private Figure figure;
 	
 	private int x = 10;	
@@ -74,5 +74,9 @@ public class Button implements IVisible {
 		g2d.drawRect(x, y, width, height);
 
 		figure.paint(g2d, false);
+	}
+
+	public int getIndex() {
+		return this.index;
 	}
 }
