@@ -323,6 +323,21 @@ class EveFrame extends JFrame {
 							break;
 
 
+						// alterar a espessura da borda da figura
+						case KeyEvent.VK_9:
+							if (focus != null) {
+								float aux = focus.getStrokeWidth();
+								focus.setStrokeWidth(aux - 1.0f);
+							}
+							break;
+						case KeyEvent.VK_0:
+							if (focus != null) {
+								float aux = focus.getStrokeWidth();
+								focus.setStrokeWidth(aux + 1.0f);
+							}
+							break;
+
+
 						case KeyEvent.VK_RIGHT:
 						case KeyEvent.VK_L:
 							if (focus != null) {

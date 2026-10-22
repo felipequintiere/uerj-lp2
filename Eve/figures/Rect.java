@@ -16,7 +16,7 @@ public class Rect extends Figure {
 		this.height = height;
 	}
 	public Rect(int x, int y, int width, int height,
-		    Color fillcolor, Color borderColor) {
+		    Color fillcolor, Color borderColor, float strokeWidth) {
 		super(x, y);
 
 		this.width = width;
@@ -24,6 +24,7 @@ public class Rect extends Figure {
 
 		super.fillColor = fillcolor;
 		super.borderColor = borderColor;
+		super.strokeWidth = strokeWidth;
 	}
 
 
@@ -67,7 +68,7 @@ public class Rect extends Figure {
 
 
 		g2d.setColor(super.HOVER_COLOR);
-		g2d.setStroke(new BasicStroke(2.0f));
+		g2d.setStroke(new BasicStroke(super.HOVER_STROKE_WIDTH));
 		g2d.drawRect(x, y, width, height);
 
 
@@ -75,7 +76,7 @@ public class Rect extends Figure {
 	}
 	public void paintFocus(Graphics2D g2d) {
 		g2d.setColor(super.FOCUS_COLOR);
-		g2d.setStroke(new BasicStroke(2.0f));
+		g2d.setStroke(new BasicStroke(super.FOCUS_STROKE_WIDTH));
 		g2d.drawRect(x, y, width, height);
 	}
 	public void paintHandle(Graphics2D g2d) {
@@ -84,7 +85,7 @@ public class Rect extends Figure {
 
 
 		g2d.setColor(super.HOVER_COLOR);
-		g2d.setStroke(new BasicStroke(2.0f));
+		g2d.setStroke(new BasicStroke(super.HOVER_STROKE_WIDTH));
 		g2d.drawRect(
 			x + width - super.handle_gap,
 			y + height - super.handle_gap,
@@ -104,7 +105,7 @@ public class Rect extends Figure {
 		g2d.fillRect(x, y, width, height);
 
 		g2d.setColor(super.borderColor);
-		g2d.setStroke(new BasicStroke(2.0f));
+		g2d.setStroke(new BasicStroke(super.strokeWidth));
 		g2d.drawRect(x, y, width, height);
 
 		if (focused) {

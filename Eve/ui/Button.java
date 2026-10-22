@@ -1,10 +1,10 @@
 package ui;
 
-//import figures.Figure;
+import java.awt.*;
+import java.awt.Graphics2D;
+
 import figures.*;
 import ivisible.IVisible;
-import java.awt.Graphics2D;
-import java.awt.*;
 
 public class Button implements IVisible {
 	public int index;
@@ -29,7 +29,7 @@ public class Button implements IVisible {
 
 		case 1:
 			figure = new Triangle(
-					      (x + width)/2 + 5, y + 5,
+					      (x + width) / 2 + 5, y + 5,
 					      x + 5, y + height - 5,
 					      x + width - 5, y + height - 5
 					     );

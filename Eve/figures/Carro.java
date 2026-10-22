@@ -22,7 +22,8 @@ public class Carro extends Figure {
 			width,
 			height / 3,
 			super.fillColor,
-			super.borderColor
+			super.borderColor,
+			super.strokeWidth
 		);
 
 		this.roda1 = new Ellipse(
@@ -31,7 +32,8 @@ public class Carro extends Figure {
 			width / 4,
 			height / 3,
 			super.fillColor,
-			super.borderColor
+			super.borderColor,
+			super.strokeWidth
 		);
 
 		this.roda2 = new Ellipse(
@@ -40,7 +42,8 @@ public class Carro extends Figure {
 			width / 4,
 			height / 3,
 			super.fillColor,
-			super.borderColor
+			super.borderColor,
+			super.strokeWidth
 		);
 	}
 
@@ -111,7 +114,7 @@ public class Carro extends Figure {
 
 
 		g2d.setColor(super.HOVER_COLOR);
-		g2d.setStroke(new BasicStroke(2.0f));		
+		g2d.setStroke(new BasicStroke(super.HOVER_STROKE_WIDTH));		
 		g2d.drawRect(
 			x + width - handle_gap,
 			y + height - handle_gap,
@@ -159,5 +162,15 @@ public class Carro extends Figure {
 
 
 		atualizarCarro();
+	}
+	
+	@Override
+	public void setStrokeWidth(float strokeWidth) {
+		if (strokeWidth >= 1) {
+			this.strokeWidth = strokeWidth;
+			this.chassi.setStrokeWidth(strokeWidth);
+			this.roda1.setStrokeWidth(strokeWidth);
+			this.roda2.setStrokeWidth(strokeWidth);
+		}
 	}
 }

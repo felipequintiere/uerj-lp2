@@ -70,16 +70,16 @@ public class Line extends Figure {
 	}
 	public void paintFocus(Graphics2D g2d) {
 		g2d.setColor(super.FOCUS_COLOR);
-		g2d.setStroke(new BasicStroke(2.0f));
+		g2d.setStroke(new BasicStroke(super.FOCUS_STROKE_WIDTH));
 		g2d.draw(new Line2D.Double(x, y, x2, y2));
-		//g2d.drawRect(x, y, x2 - x, y2 - y); // mais complexo
+		//g2d.drawRect(x, y, x2 - x, y2 - y);
 	}
 	public void paintHandle(Graphics2D g2d) {
 		AffineTransform saveAT = g2d.getTransform();
 		g2d.rotate(super.angle, (x + x2)/2, (y + y2)/2);
 
 		g2d.setColor(super.HOVER_COLOR);
-		g2d.setStroke(new BasicStroke(2.0f));
+		g2d.setStroke(new BasicStroke(super.HOVER_STROKE_WIDTH));
 		g2d.drawRect(
 			x2 - super.handle_gap,
 			y2 - super.handle_gap,
@@ -100,7 +100,7 @@ public class Line extends Figure {
 
 
 		g2d.setColor(super.borderColor);
-		g2d.setStroke(new BasicStroke(2.0f));
+		g2d.setStroke(new BasicStroke(super.strokeWidth));
 		g2d.draw(new Line2D.Double(x, y, x2, y2));
 
 		if (focused) {

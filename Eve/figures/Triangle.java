@@ -95,14 +95,13 @@ public class Triangle extends Figure {
 
 	public void resize(int dx, int dy) {
 		switch (vertex) {
-		/*case 0: // ponteiro fora dos vértices
+		case 0: // ponteiro fora dos vértices
 			y -= dy;
 			x2 -= dx;
 			y2 += dy;
 			x3 += dx;
 			y3 += dy;
 			break;
-		*/
 		case 1:
 			x += dx;
 			y += dy;
@@ -135,7 +134,7 @@ public class Triangle extends Figure {
 
 
 		g2d.setColor(super.HOVER_COLOR);
-		g2d.setStroke(new BasicStroke(2.0f));
+		g2d.setStroke(new BasicStroke(super.HOVER_STROKE_WIDTH));
 		g2d.drawPolygon(triangle);
 
 
@@ -143,7 +142,7 @@ public class Triangle extends Figure {
 	}
 	public void paintFocus(Graphics2D g2d) {
 		g2d.setColor(super.FOCUS_COLOR);
-		g2d.setStroke(new BasicStroke(2.0f));
+		g2d.setStroke(new BasicStroke(super.FOCUS_STROKE_WIDTH));
 		g2d.drawPolygon(triangle);
 	}
 	public void paintHandle(Graphics2D g2d) {
@@ -152,7 +151,7 @@ public class Triangle extends Figure {
 
 
 		g2d.setColor(super.HOVER_COLOR);
-		g2d.setStroke(new BasicStroke(2.0f));
+		g2d.setStroke(new BasicStroke(super.HOVER_STROKE_WIDTH));
                 g2d.drawRect(
                         x - super.handle_gap,
                         y - super.handle_gap,
@@ -184,7 +183,7 @@ public class Triangle extends Figure {
 		g2d.fillPolygon(triangle);
 
 		g2d.setColor(super.borderColor);
-		g2d.setStroke(new BasicStroke(2.0f));
+		g2d.setStroke(new BasicStroke(super.strokeWidth));
 		g2d.drawPolygon(triangle);
 
 		if (focused) {

@@ -13,30 +13,19 @@ import java.io.*;
 public abstract class Figure implements IVisible, Serializable {
 	protected int x;
 	protected int y;
+
 	protected double angle = 0;
+	protected int handle_gap = 10;
 
 	protected Color fillColor = Color.WHITE;
 	protected Color borderColor = Color.BLACK;
-	//protected BasicStroke stroke = new BasicStroke(2.0f);
-
-	protected int handle_gap = 10;
-
+	protected float strokeWidth = 2.0f;
 
 	protected static final Color FOCUS_COLOR = Color.RED;
-	// protected static final BasicStroke FOCUS_STROKE =
-	// 	new BasicStroke(2.0f);
+	protected static final float FOCUS_STROKE_WIDTH = 2.0f;
 
 	protected static final Color HOVER_COLOR = Color.BLUE;
-	// protected static final BasicStroke HOVER_STROKE =
-	// 	new BasicStroke(
-	// 		3.0f,
-	// 		BasicStroke.CAP_BUTT,
-	// 		BasicStroke.JOIN_MITER,
-	// 		10.0f,
-	// 		new float[] {5.0f, 5.0f},
-	// 		0.0f
-	// 	);
-
+	protected static final float HOVER_STROKE_WIDTH = 2.0f;
 
 	public Figure(int x, int y) {
 		this.x = x;
@@ -86,16 +75,26 @@ public abstract class Figure implements IVisible, Serializable {
 	}
 
 
-	// setter de cor de contorno
+
+	// setters
 	public void setBorderColor(Color color) {
 		this.borderColor = color;
 	}
-	// setter de cor de preenchimento
 	public void setFillColor(Color color) {
 		this.fillColor = color;
 	}
+	public void setStrokeWidth(float strokeWidth) {
+		if (strokeWidth >= 1) {
+			this.strokeWidth = strokeWidth;
+		}
+	}
 
+	// getters
 	public double getAngle() {
 		return this.angle;
 	}
+	public float getStrokeWidth() {
+		return this.strokeWidth;
+	}
+
 }
